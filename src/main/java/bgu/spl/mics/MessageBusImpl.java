@@ -127,21 +127,16 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public Message awaitMessage(MicroService m) throws InterruptedException {
-        //while (microMap.get(m).isEmpty()) {
-        //try {
-        //	wait();
-        //}
-        //catch (InterruptedException e) {
-        //}
-        //return microMap.get(m).removeFirst();
+       try {
+           while (microMap.get(m).isEmpty()){
+               wait();
+           }
+           return microMap.get(m).removeFirst();
+       }
+       catch (InterruptedException e){
 
-        //}
-        while (microMap.get(m).isEmpty()) {
-            throw new InterruptedException();
-        }
-
-
-        return null;
+       }
+       return null;
     }
 
 

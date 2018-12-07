@@ -41,7 +41,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-        // TODO Auto-generated method stub
         if (microMap.containsKey(m)) {
             synchronized (eventMap) {
                 LinkedList<MicroService> toAdd = new LinkedList<>(eventMap.get(type));
@@ -57,7 +56,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-        // TODO Auto-generated method stub
         if (microMap.containsKey(m)) {
             synchronized (broadcastMap) {
                 LinkedList<MicroService> toAdd = new LinkedList<>(broadcastMap.get(type));
@@ -77,7 +75,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public void sendBroadcast(Broadcast b) {
-        // TODO Auto-generated method stub
         for (MicroService service : broadcastMap.get(b.getClass())) {
             microMap.get(service).add(b);
         }
@@ -86,7 +83,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public <T> Future<T> sendEvent(Event<T> e) {
-        // TODO Auto-generated method stub
         Future<T> future = new Future<>();
         if (!eventMap.containsKey(e.getClass()) || eventMap.get(e).size() == 0) {
             return null;
@@ -112,7 +108,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public void unregister(MicroService m) {
-        // TODO Auto-generated method stub
         for (Class<? extends Message> type : microEventTypes.get(m)) {
             LinkedList<MicroService> toAdd = new LinkedList<>(eventMap.get(type));
             toAdd.remove(m);
@@ -128,7 +123,6 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public Message awaitMessage(MicroService m) throws InterruptedException {
-        // TODO Auto-generated method stub
         //while (microMap.get(m).isEmpty()) {
         //try {
         //	wait();

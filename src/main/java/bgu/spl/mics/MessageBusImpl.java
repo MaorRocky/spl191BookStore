@@ -17,9 +17,15 @@ public class MessageBusImpl implements MessageBus {
         private static MessageBusImpl instance = new MessageBusImpl();
     }
 
+    /*@microMap this HashMap holds a links between each microService to his message queue*/
     private ConcurrentHashMap<MicroService, LinkedList<Message>> microMap;
+    /*
+    @microEventTypes for each micro service we will link the type of events or broadcasts which the micro service wants to receive*/
     private ConcurrentHashMap<MicroService, LinkedList<Class<? extends Message>>> microEventTypes;
+    /*
+    @eventMap for each event type we will link which micro services need to receive it.*/
     private ConcurrentHashMap<Class<? extends Message>, LinkedList<MicroService>> eventMap;
+    /*@broadcastMap for each broadcast type we will link which micro services need to receive it*/
     private ConcurrentHashMap<Class<? extends Message>, LinkedList<MicroService>> broadcastMap;
     private ConcurrentHashMap<Class<? extends Message>, Integer> nextMicroIndexs;
     private ConcurrentHashMap<Event, Future> resolveMap;

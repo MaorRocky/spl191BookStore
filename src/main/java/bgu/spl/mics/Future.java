@@ -30,8 +30,14 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		//TODO: implement this.
-		return null;
+		while (!isDone()) {
+			try {
+				wait();
+			}
+			catch(InterruptedException e){}
+		}
+		notifyAll();
+		return result;
 	}
 	
 	/**

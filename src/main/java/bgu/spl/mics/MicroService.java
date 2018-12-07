@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -25,6 +27,7 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private MessageBusImpl bus;
+    private ConcurrentHashMap<Class<? extends Message>, Callback> callList;
 
 
 
@@ -35,7 +38,7 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
         bus = MessageBusImpl.getInstance();
-        bus.register(this);
+        callList = new ConcurrentHashMap<>();
     }
 
     /**
@@ -61,6 +64,9 @@ public abstract class MicroService implements Runnable {
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
         bus.subscribeEvent(type,this);
+        if (!callList.containsKey(type)) {
+            callList.put(type, callback);
+        }
     }
 
     /**
@@ -85,6 +91,10 @@ public abstract class MicroService implements Runnable {
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
         //TODO: implement this.
+        bus.subscribeBroadcast(type, this);
+        if (!callList.contains(type)) {
+            callList.put(type, callback);
+        }
     }
 
     /**
@@ -111,6 +121,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final void sendBroadcast(Broadcast b) {
         //TODO: implement this.
+        bus.sendBroadcast(b);
     }
 
     /**
@@ -155,13 +166,18 @@ public abstract class MicroService implements Runnable {
     @Override
     public final void run() {
         initialize();
+        bus.register(this);
         while (!terminated) {
+            Message message;
             try {
-                bus.awaitMessage(this);
+                message = bus.awaitMessage(this);
+                callList.get(message.getClass()).call(message);
             }
             catch (InterruptedException e) {
+                terminated = true;
             }
-        }
-    }
 
+        }
+        bus.unregister(this);
+    }
 }

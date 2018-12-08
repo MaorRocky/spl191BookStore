@@ -12,9 +12,11 @@ public class DeliveryVehicle {
     }
 
     public void deliver(String address, int distance) {
+        //TODO implement this
         try {
             sleep(distance/speed);
         }
         catch (InterruptedException e){}
     }
+
 }

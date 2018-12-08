@@ -71,7 +71,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		// TODO Auto-generated method stub
 		if (broadcastTypeToMicroService.containsKey(b.getClass())) {
 			for (MicroService service: broadcastTypeToMicroService.get(b.getClass())) {
 				microServiceToMessagesList.get(service).add(b);
@@ -82,7 +81,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		// TODO Auto-generated method stub
 		Future<T> future = new Future<>();
 		if (!eventTypeToMicroService.containsKey(e.getClass()) || eventTypeToMicroService.get(e).size() == 0) {
 			return null;

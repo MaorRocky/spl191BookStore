@@ -9,11 +9,11 @@ import java.util.concurrent.*;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl<K, V> implements MessageBus {
-	private static class SingeltonHolder {
+	private static class SingletonHolder {
 		private static MessageBusImpl instance = new MessageBusImpl();
 	}
 	// Link each micro service to his messages queue
-	private ConcurrentHashMap<MicroService, BlockingQueue<Message>> microServiceToMessagesList;
+	private ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServiceToMessagesList;
 	// Link each micro service to the types of events/broadcasts that he is subscribe to
 	private ConcurrentHashMap<MicroService, LinkedList<Class<? extends Message>>> microServiceToMessageTypes;
 	/*we Link to each event type the micro-service which can handle him*/
@@ -28,7 +28,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 
 	public static MessageBusImpl getInstance() {
-		return SingeltonHolder.instance;
+		return SingletonHolder.instance;
 	}
 
 	private MessageBusImpl(){

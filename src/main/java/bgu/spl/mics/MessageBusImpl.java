@@ -1,9 +1,5 @@
 package bgu.spl.mics;
-
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.*;
 
 
@@ -13,7 +9,7 @@ import java.util.concurrent.*;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl<K, V> implements MessageBus {
-	private static class SingeltonHolder {
+	private static class SingletonHolder {
 		private static MessageBusImpl instance = new MessageBusImpl();
 	}
 	// Link each micro service to his messages queue
@@ -32,7 +28,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 
 	public static MessageBusImpl getInstance() {
-		return SingeltonHolder.instance;
+		return SingletonHolder.instance;
 	}
 
 	private MessageBusImpl(){
@@ -81,7 +77,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		// TODO Auto-generated method stub
 		if (broadcastTypeToMicroService.containsKey(b.getClass())) {
 			for (MicroService service: broadcastTypeToMicroService.get(b.getClass())) {
 				microServiceToMessagesList.get(service).add(b);
@@ -92,7 +87,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		// TODO Auto-generated method stub
 		Future<T> future = new Future<>();
 		if (!eventTypeToMicroService.containsKey(e.getClass())) {
 			return null;

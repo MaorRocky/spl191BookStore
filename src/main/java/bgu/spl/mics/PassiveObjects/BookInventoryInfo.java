@@ -1,4 +1,4 @@
-package bgu.spl.mics;
+package bgu.spl.mics.PassiveObjects;
 
 public class BookInventoryInfo {
     private String bookTitle;

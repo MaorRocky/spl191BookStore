@@ -1,4 +1,4 @@
-package bgu.spl.mics;
+package bgu.spl.mics.PassiveObjects;
 
 import static java.lang.Thread.sleep;
 

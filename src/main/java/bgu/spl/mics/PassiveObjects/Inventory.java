@@ -1,9 +1,8 @@
-package bgu.spl.mics;
+package bgu.spl.mics.PassiveObjects;
 
 import bgu.spl.mics.application.passiveObjects.OrderResult;
 
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import static bgu.spl.mics.application.passiveObjects.OrderResult.*;

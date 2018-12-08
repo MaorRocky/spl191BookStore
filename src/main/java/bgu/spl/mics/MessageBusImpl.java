@@ -13,7 +13,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
 		private static MessageBusImpl instance = new MessageBusImpl();
 	}
 	// Link each micro service to his messages queue
-	private ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServiceToMessagesList;
+	private ConcurrentHashMap<MicroService, BlockingQueue<Message>> microServiceToMessagesList;
 	// Link each micro service to the types of events/broadcasts that he is subscribe to
 	private ConcurrentHashMap<MicroService, LinkedList<Class<? extends Message>>> microServiceToMessageTypes;
 	/*we Link to each event type the micro-service which can handle him*/
@@ -72,7 +72,9 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		eventToResolveMap.get(e).resolve(result);
+		synchronized (eventToResolveMap) {
+			eventToResolveMap.get(e).resolve(result);
+		}
 	}
 
 	@Override
@@ -88,15 +90,17 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Future<T> future = new Future<>();
-		if (!eventTypeToMicroService.containsKey(e.getClass())) {
+		if (!eventTypeToMicroService.containsKey(e.getClass()) || eventTypeToMicroService.get(e.getClass()).isEmpty()) {
 			return null;
 		}
 		else {
-			MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
-			microServiceToMessagesList.get(next).add(e);
-			eventTypeToMicroService.get(e.getClass()).addLast(next);
-			eventToResolveMap.put(e, future);
-			return future;
+			synchronized (eventToResolveMap) {
+				MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
+				microServiceToMessagesList.get(next).add(e);
+				eventTypeToMicroService.get(e.getClass()).addLast(next);
+				eventToResolveMap.put(e, future);
+				return future;
+			}
 		}
 	}
 

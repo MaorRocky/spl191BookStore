@@ -2,6 +2,9 @@ package bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.interrupted;
+import static java.lang.Thread.sleep;
+
 /**
  * A Future object represents a promised result - an object that will
  * eventually be resolved to hold a result of some operation. The class allows
@@ -31,11 +34,10 @@ public class Future<T> {
 	public T get() {
 		while (!isDone()) {
 			try {
-				wait();
+				sleep(10);
 			}
 			catch(InterruptedException e){}
 		}
-		notifyAll();
 		return result;
 	}
 	
@@ -44,6 +46,7 @@ public class Future<T> {
      */
 	public void resolve (T result) {
         this.result = result;
+        Thread.currentThread().interrupt();
 	}
 	
 	/**
@@ -58,15 +61,23 @@ public class Future<T> {
      * This method is non-blocking, it has a limited amount of time determined
      * by {@code timeout}
      * <p>
-     * @param timout 	the maximal amount of time units to wait for the result.
+     * @param timeout 	the maximal amount of time units to wait for the result.
      * @param unit		the {@link TimeUnit} time units to wait.
      * @return return the result of type T if it is available, if not, 
      * 	       wait for {@code timeout} TimeUnits {@code unit}. If time has
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-
-		return null;
+		if (result != null) {
+			return result;
+		}
+		try {
+			unit.sleep(unit.toMillis(timeout));
+		}
+		catch (InterruptedException e){
+			return result;
+		}
+		return result;
 	}
 
 }

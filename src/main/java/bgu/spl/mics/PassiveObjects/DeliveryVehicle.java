@@ -1,4 +1,4 @@
-package bgu.spl.mics;
+package bgu.spl.mics.PassiveObjects;
 
 import static java.lang.Thread.sleep;
 
@@ -12,9 +12,11 @@ public class DeliveryVehicle {
     }
 
     public void deliver(String address, int distance) {
+        //TODO implement this
         try {
             sleep(distance/speed);
         }
         catch (InterruptedException e){}
     }
+
 }

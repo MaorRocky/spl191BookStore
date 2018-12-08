@@ -37,6 +37,7 @@ public abstract class MicroService implements Runnable {
         this.name = name;
         bus = MessageBusImpl.getInstance();
         callList = new ConcurrentHashMap<>();
+        bus.register(this);
     }
 
     /**
@@ -118,7 +119,6 @@ public abstract class MicroService implements Runnable {
      * @param b The broadcast message to send
      */
     protected final void sendBroadcast(Broadcast b) {
-        //TODO: implement this.
         bus.sendBroadcast(b);
     }
 
@@ -158,7 +158,7 @@ public abstract class MicroService implements Runnable {
     }
 
     /**
-     * The entry point of the micro-service. TODO: you must complete this code
+     * The entry point of the micro-service.
      * otherwise you will end up in an infinite loop.
      */
     @Override
@@ -166,15 +166,12 @@ public abstract class MicroService implements Runnable {
         initialize();
         bus.register(this);
         while (!terminated) {
-            Message message;
+            Message message = null;
             try {
                 message = bus.awaitMessage(this);
-                callList.get(message.getClass()).call(message);
             }
-            catch (InterruptedException e) {
-                terminated = true;
-            }
-
+            catch (InterruptedException e) {}
+            callList.get(message.getClass()).call(message);
         }
         bus.unregister(this);
     }

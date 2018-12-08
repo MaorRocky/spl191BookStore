@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * must extend. The abstract MicroService class is responsible to get and
  * manipulate the singleton {@link MessageBus} instance.
  * <p>
- * Derived classes of MicroService should never directly touch the message-bus.
+ * Derived classes of MicroService should never directly touch the messageK-bus.
  * Instead, they have a set of internal protected wrapping methods (e.g.,
  * {@link #sendBroadcast(bgu.spl.mics.Broadcast)}, {@link #sendBroadcast(bgu.spl.mics.Broadcast)},
  * etc.) they can use. When subscribing to message-types,

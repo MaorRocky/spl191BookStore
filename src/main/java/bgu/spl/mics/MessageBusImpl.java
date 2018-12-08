@@ -1,10 +1,10 @@
 package bgu.spl.mics;
 
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
-
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
+import java.util.concurrent.*;
 
 
 /**
@@ -16,12 +16,18 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	private static class SingeltonHolder {
 		private static MessageBusImpl instance = new MessageBusImpl();
 	}
-	private ConcurrentHashMap<MicroService, LinkedList<Message>> microMap;
-	private ConcurrentHashMap<MicroService, LinkedList<Class<? extends Message>>> microEventTypes;
-	private ConcurrentHashMap<Class<? extends Message>, LinkedList<MicroService>> eventMap;
-	private ConcurrentHashMap<Class<? extends Message>, LinkedList<MicroService>> broadcastMap;
-	private ConcurrentHashMap<Class<? extends Message>, Integer> nextMicroIndexs;
-	private ConcurrentHashMap<Event, Future> resolveMap;
+	// Link each micro service to his messages queue
+	private ConcurrentHashMap<MicroService, BlockingQueue<Message>> microServiceToMessagesList;
+	// Link each micro service to the types of events/broadcasts that he is subscribe to
+	private ConcurrentHashMap<MicroService, LinkedList<Class<? extends Message>>> microServiceToMessageTypes;
+	/*we Link to each event type the micro-service which can handle him*/
+	private ConcurrentHashMap<Class<? extends Event>, LinkedList<MicroService>> eventTypeToMicroService;
+	/*link between broadcast and the micro-services which can handle him*/
+	private ConcurrentHashMap<Class<? extends Broadcast>, LinkedList<MicroService>> broadcastTypeToMicroService;
+	/*Link between specific events to their future result */
+	private ConcurrentHashMap<Event, Future> eventToResolveMap;
+
+
 
 
 
@@ -30,23 +36,22 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	}
 
 	private MessageBusImpl(){
-		microMap = new ConcurrentHashMap<>();
-		eventMap = new ConcurrentHashMap<>();
-		broadcastMap = new ConcurrentHashMap<>();
-		nextMicroIndexs = new ConcurrentHashMap<>();
-		microEventTypes = new ConcurrentHashMap<>();
-		resolveMap = new ConcurrentHashMap<>();
+		microServiceToMessagesList = new ConcurrentHashMap<>();
+		eventTypeToMicroService = new ConcurrentHashMap<>();
+		broadcastTypeToMicroService = new ConcurrentHashMap<>();
+		microServiceToMessageTypes = new ConcurrentHashMap<>();
+		eventToResolveMap = new ConcurrentHashMap<>();
 	}
 
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		// TODO Auto-generated method stub
-		if (microMap.containsKey(m)) {
-			synchronized (eventMap) {
-				eventMap.get(type).addLast(m);
-				microEventTypes.get(m).addLast(type);
+		if (microServiceToMessagesList.containsKey(m)) {
+			if (!eventTypeToMicroService.containsKey(type)) {
+				eventTypeToMicroService.put(type, new LinkedList<>());
 			}
+			eventTypeToMicroService.get(type).addLast(m);
+			microServiceToMessageTypes.get(m).addLast(type);
 		}
 	}
 
@@ -54,26 +59,26 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		// TODO Auto-generated method stub
-		if (microMap.containsKey(m)) {
-			synchronized (broadcastMap) {
-				broadcastMap.get(type).addLast(m);
-				microEventTypes.get(m).addLast(type);
+		if (microServiceToMessagesList.containsKey(m)) {
+			if (!broadcastTypeToMicroService.containsKey(type)) {
+				broadcastTypeToMicroService.put(type, new LinkedList<>());
 			}
+			broadcastTypeToMicroService.get(type).addLast(m);
+			microServiceToMessageTypes.get(m).addLast(type);
 		}
 	}
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		resolveMap.get(e).resolve(result);
+		eventToResolveMap.get(e).resolve(result);
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
-		if (broadcastMap.get(b.getClass()) != null) {
-			for (MicroService service: broadcastMap.get(b.getClass())) {
-				microMap.get(service).addLast(b);
+		if (broadcastTypeToMicroService.containsKey(b.getClass())) {
+			for (MicroService service: broadcastTypeToMicroService.get(b.getClass())) {
+				microServiceToMessagesList.get(service).add(b);
 			}
 		}
 	}
@@ -83,50 +88,41 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		// TODO Auto-generated method stub
 		Future<T> future = new Future<>();
-		if (!eventMap.containsKey(e.getClass()) || eventMap.get(e).size() == 0) {
+		if (!eventTypeToMicroService.containsKey(e.getClass()) || eventTypeToMicroService.get(e).size() == 0) {
 			return null;
 		}
 		else {
-			int index = nextMicroIndexs.get(e.getClass());
-			nextMicroIndexs.replace(e.getClass(),(nextMicroIndexs.get(e) + 1)%eventMap.get(e).size());
-			microMap.get(eventMap.get(e.getClass()).get(index)).addLast(e);
-			resolveMap.put(e, future);
+			MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
+			microServiceToMessagesList.get(next).add(e);
+			eventTypeToMicroService.get(e.getClass()).addLast(next);
+			eventToResolveMap.put(e, future);
 			return future;
 		}
 	}
 
 	@Override
 	public void register(MicroService m) {
-		if (!microMap.containsKey(m)) {
-			microMap.put(m, new LinkedList<>());
+		if (!microServiceToMessagesList.containsKey(m)) {
+			microServiceToMessagesList.put(m, new LinkedBlockingQueue<>());
 		}
 
 	}
 
 	@Override
 	public void unregister(MicroService m) {
-		// TODO Auto-generated method stub
-		if (microEventTypes.get(m) != null) {
-			for (Class<? extends Message> type: microEventTypes.get(m)) {
-				eventMap.get(type).remove(m);
-				broadcastMap.get(type).remove(m);
+		if (microServiceToMessageTypes.containsKey(m)) {
+			for (Class<? extends Message> type: microServiceToMessageTypes.get(m)) {
+				eventTypeToMicroService.get(type).remove(m);
+				broadcastTypeToMicroService.get(type).remove(m);
 			}
 		}
-		microMap.remove(m);
-		microEventTypes.remove(m);
+		microServiceToMessagesList.remove(m);
+		microServiceToMessageTypes.remove(m);
 	}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		// TODO Auto-generated method stub
-			while (microMap.get(m).isEmpty()) {
-				try {
-					wait();
-				}
-				catch (InterruptedException e) {}
-			}
-			notifyAll();
-			return microMap.get(m).removeFirst();
+			return microServiceToMessagesList.get(m).take();
 	}
 
 

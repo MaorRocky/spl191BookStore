@@ -2,7 +2,6 @@ package bgu.spl.mics;
 import java.util.LinkedList;
 import java.util.concurrent.*;
 
-
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
  * Write your implementation here!
@@ -118,9 +117,4 @@ public class MessageBusImpl<K, V> implements MessageBus {
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 			return microServiceToMessagesList.get(m).take();
 	}
-
-
-
-	
-
 }

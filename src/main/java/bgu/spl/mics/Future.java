@@ -2,9 +2,6 @@ package bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Thread.interrupted;
-import static java.lang.Thread.sleep;
-
 /**
  * A Future object represents a promised result - an object that will
  * eventually be resolved to hold a result of some operation. The class allows

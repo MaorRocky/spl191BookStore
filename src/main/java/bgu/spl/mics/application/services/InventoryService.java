@@ -14,16 +14,18 @@ import bgu.spl.mics.MicroService;
  */
 
 public class InventoryService extends MicroService {
-
+private Inventory inventory;
     public InventoryService() {
-        super("Change_This_Name");
+        super("InventoryService");
         // TODO Implement this
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
 
     }
+
+
+
 
 }

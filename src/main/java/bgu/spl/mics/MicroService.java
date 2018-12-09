@@ -37,7 +37,7 @@ public abstract class MicroService implements Runnable {
         this.name = name;
         bus = MessageBusImpl.getInstance();
         callList = new ConcurrentHashMap<>();
-        bus.register(this);
+
     }
 
     /**
@@ -168,8 +168,8 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
-        initialize();
         bus.register(this);
+        initialize();
         while (!terminated) {
             Message message = null;
             try {

@@ -1,6 +1,8 @@
 package bgu.spl.mics.PassiveObjects;
 
 import bgu.spl.mics.application.passiveObjects.OrderResult;
+import com.sun.xml.internal.bind.v2.TODO;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,4 +46,8 @@ public class Inventory {
             return inventory.get(book).getPrice();
         else return -1;
     }
+    /*TODO*/
+    /*public void printInventoryToFile(String filename){
+
+    }*/
 }

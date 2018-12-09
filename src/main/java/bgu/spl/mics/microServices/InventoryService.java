@@ -6,7 +6,7 @@ import bgu.spl.mics.PassiveObjects.Inventory;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InventoryService {
+public class InventoryService implements Runnable {
     private Inventory inventory;
 
 
@@ -15,8 +15,9 @@ public class InventoryService {
         this.inventory.load(inventory);
     }
 
+    @Override
+    public void run() {
 
-
-
+    }
 }
 

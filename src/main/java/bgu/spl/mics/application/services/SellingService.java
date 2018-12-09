@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Future;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.Events.*;
 import bgu.spl.mics.MicroService;
@@ -18,18 +19,13 @@ public class SellingService extends MicroService {
 
     public SellingService() {
         super("SellingService");
-
     }
 
     @Override
     protected void initialize() {
         this.subscribeEvent(BookOrderEvent.class, event -> {
-            sendEvent(new CheckAvailability(event.getBookName()));
+            Future future = sendEvent(new CheckAvailability(event.getBookName()));
         });
-        this.subscribeEvent(TakeBook.class, takeEvent -> {
-            complete(takeEvent, Inventory.getInstance().take(takeEvent.getBookTitle()));
-        });
-
 
     }
 

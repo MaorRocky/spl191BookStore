@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.application.Events.CheckAvailability;
+import bgu.spl.mics.application.Events.TakeBook;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.MicroService;
 
@@ -25,6 +26,9 @@ public class InventoryService extends MicroService {
         this.subscribeEvent(CheckAvailability.class, checkEvent -> {
             Integer price = Inventory.getInstance().checkAvailabiltyAndGetPrice(checkEvent.getBookTitle());
             complete(checkEvent, price);
+        });
+        this.subscribeEvent(TakeBook.class, takeEvent -> {
+            complete(takeEvent, Inventory.getInstance().take(takeEvent.getBookTitle()));
         });
 
 

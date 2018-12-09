@@ -1,7 +1,5 @@
-package bgu.spl.mics.Events;
-
+package bgu.spl.mics.application.Events;
 import bgu.spl.mics.Event;
-
 public class DeliveryEvent implements Event {
     private int customerId;
     private String address;
@@ -19,3 +17,4 @@ public class DeliveryEvent implements Event {
         return address;
     }
 }
+

@@ -37,7 +37,6 @@ public abstract class MicroService implements Runnable {
         this.name = name;
         bus = MessageBusImpl.getInstance();
         callList = new ConcurrentHashMap<>();
-        bus.register(this);
     }
 
     /**
@@ -89,7 +88,6 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
         bus.subscribeBroadcast(type, this);
         if (!callList.contains(type)) {
             callList.put(type, callback);
@@ -163,8 +161,8 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
-        initialize();
         bus.register(this);
+        initialize();
         while (!terminated) {
             Message message = null;
             try {

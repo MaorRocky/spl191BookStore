@@ -1,7 +1,16 @@
 package bgu.spl.mics.application.services;
-import bgu.spl.mics.application.passiveObjects.*;
-import bgu.spl.mics.application.Events.*;
+
+import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.Events.BookOrderEvent;
+import bgu.spl.mics.application.Events.TickBroadcast;
+import bgu.spl.mics.application.passiveObjects.Customer;
+import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 /**
  * APIService is in charge of the connection between a client and the store.
@@ -13,15 +22,34 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class APIService extends MicroService{
+	private Customer customer;
+	private List<BookOrderEvent> orders;
 
-	public APIService() {
-		super("Change_This_Name");
-		// TODO Implement this
+	public APIService(String name, Customer customer, List<BookOrderEvent> orders) {
+		super(name);
+		this.customer = customer;
+		this.orders = new LinkedList<BookOrderEvent>();
+		for(BookOrderEvent order: orders) {
+			this.orders.add(order);
+		}
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		this.subscribeBroadcast(TickBroadcast.class, (TickBroadcast broadcast)-> {
+			for(BookOrderEvent order: orders) {
+				if(order.getExcecuteTick() == broadcast.getTick()) {
+					Future<OrderReceipt> future = sendEvent(order);
+					while (!future.isDone()) {
+						try {
+							sleep(100);
+						}
+						catch(InterruptedException e) {}
+					}
+
+				}
+			}
+		});
 		
 	}
 

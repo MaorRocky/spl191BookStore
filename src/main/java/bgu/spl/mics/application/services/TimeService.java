@@ -34,7 +34,12 @@ public class TimeService extends MicroService {
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        while (tickNumber <= duration) {
+            timer.schedule(new MyTimeTask(this), speed);
+        }
+        timer.purge();
+        timer.cancel();
+        terminate();
 
     }
 

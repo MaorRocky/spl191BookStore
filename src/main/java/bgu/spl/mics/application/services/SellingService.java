@@ -26,6 +26,9 @@ public class SellingService extends MicroService {
         this.subscribeEvent(BookOrderEvent.class, event -> {
             sendEvent(new CheckAvailability(event.getBookName()));
         });
+        this.subscribeEvent(TakeBook.class, takeEvent -> {
+            complete(takeEvent, Inventory.getInstance().take(takeEvent.getBookTitle()));
+        });
 
 
     }

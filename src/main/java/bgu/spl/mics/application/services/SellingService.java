@@ -16,13 +16,16 @@ import bgu.spl.mics.MicroService;
 public class SellingService extends MicroService{
 
 	public SellingService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("SellingService");
+
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		this.subscribeEvent(BookOrderEvent.class,(BookOrderEvent bookOrderEvent)-> {
+			Customer tempCustomer = bookOrderEvent.getCustomer();
+			sendEvent(new CheckAndTake(tempCustomer,bookOrderEvent.getBookName()));
+		});
 		
 	}
 

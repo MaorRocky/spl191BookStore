@@ -1,16 +1,17 @@
 package bgu.spl.mics.application.Events;
 
 import bgu.spl.mics.Event;
+import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 public class BookOrderEvent implements Event<OrderReceipt> {
     private String bookName;
-    private int customerId;
+    private Customer customer;
     private int executeTick;
 
-    public BookOrderEvent(String bookName, int customerId, int executeTick) {
+    public BookOrderEvent(String bookName, Customer customer, int executeTick) {
         this.bookName = bookName;
-        this.customerId = customerId;
+        this.customer = customer;
         this.executeTick = executeTick;
     }
 
@@ -18,8 +19,8 @@ public class BookOrderEvent implements Event<OrderReceipt> {
         return bookName;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public int getExecuteTick() {

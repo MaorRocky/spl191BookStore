@@ -1,22 +1,26 @@
 package bgu.spl.mics.application.Events;
 
+import bgu.spl.mics.Event;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.Customer;
-
-public class CheckAndTake {
+/**
+ * we will check if the customer has enough money and if the book is available
+ *
+ * */
+public class CheckAndTake implements Event {
     private Customer customer;
-    private BookInventoryInfo book;
+    private String bookTitle;
 
-    public CheckAndTake(Customer customer, BookInventoryInfo book) {
+    public CheckAndTake(Customer customer, String bookTitle) {
         this.customer = customer;
-        this.book = book;
+        this.bookTitle = bookTitle;
     }
 
     public Customer getCustomer() {
         return customer;
     }
 
-    public BookInventoryInfo getBook() {
-        return book;
+    public String getBookTitle() {
+        return bookTitle;
     }
 }

@@ -22,9 +22,6 @@ private Inventory inventory;
 
     @Override
     protected void initialize() {
-        this.subscribeEvent(CheckAndTake.class, event ->{
-            Integer price = Inventory.getInstance().checkAvailabiltyAndGetPrice(+)
-        });
 
     }
 

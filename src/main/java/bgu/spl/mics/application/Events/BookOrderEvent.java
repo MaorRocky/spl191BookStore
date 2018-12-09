@@ -6,12 +6,12 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 public class BookOrderEvent implements Event<OrderReceipt> {
     private String bookName;
     private int customerId;
-    private int excecuteTick;
+    private int executeTick;
 
-    public BookOrderEvent(String bookName, int customerId, int excecuteTick) {
+    public BookOrderEvent(String bookName, int customerId, int executeTick) {
         this.bookName = bookName;
         this.customerId = customerId;
-        this.excecuteTick = excecuteTick;
+        this.executeTick = executeTick;
     }
 
     public String getBookName() {
@@ -22,7 +22,7 @@ public class BookOrderEvent implements Event<OrderReceipt> {
         return customerId;
     }
 
-    public int getExcecuteTick() {
-        return excecuteTick;
+    public int getExecuteTick() {
+        return executeTick;
     }
 }

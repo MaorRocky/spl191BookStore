@@ -38,7 +38,7 @@ public class APIService extends MicroService{
 	protected void initialize() {
 		this.subscribeBroadcast(TickBroadcast.class, (TickBroadcast broadcast)-> {
 			for(BookOrderEvent order: orders) {
-				if(order.getExcecuteTick() == broadcast.getTick()) {
+				if(order.getExecuteTick() == broadcast.getTick()) {
 					Future<OrderReceipt> future = sendEvent(order);
 					while (!future.isDone()) {
 						try {

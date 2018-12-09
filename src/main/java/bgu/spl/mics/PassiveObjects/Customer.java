@@ -2,6 +2,7 @@ package bgu.spl.mics.PassiveObjects;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Customer {
     private int id;
@@ -10,7 +11,7 @@ public class Customer {
     private int distance;
     private List<OrderReceipt> receiptList;
     private int creditCard;
-    private int availableAmountInCreditCard;
+    private Integer availableAmountInCreditCard;
 
     public Customer(int id, String name, String address, int distance, int creditCard, int availableAmountInCreditCard) {
         this.id = id;
@@ -47,11 +48,17 @@ public class Customer {
     }
 
     public int getAvailableAmountInCreditCard() {
-        return availableAmountInCreditCard;
+        synchronized (availableAmountInCreditCard) {
+            return availableAmountInCreditCard;
+        }
     }
 
     public void charge(int price) {
-        availableAmountInCreditCard = availableAmountInCreditCard - price;
+        synchronized (availableAmountInCreditCard) {
+            if (availableAmountInCreditCard - price >= 0) {
+                availableAmountInCreditCard = availableAmountInCreditCard - price;
+            }
+        }
     }
 
     public void addReceipt(OrderReceipt r) {

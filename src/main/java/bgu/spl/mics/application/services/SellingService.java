@@ -21,6 +21,7 @@ public class SellingService extends MicroService {
         super("SellingService");
     }
 
+    /*TODO we need to finish it*/
     @Override
     protected void initialize() {
         this.subscribeEvent(BookOrderEvent.class, event -> {

@@ -13,7 +13,8 @@ public class Inventory {
         private static Inventory instance = new Inventory();
     }
 
-    private ConcurrentHashMap<String,BookInventoryInfo> inventory;
+    /*inventory is a hashMap between book names --> BookInventoryInfo*/
+    private ConcurrentHashMap<String, BookInventoryInfo> inventory;
 
 
     public static Inventory getInstance() {
@@ -22,36 +23,24 @@ public class Inventory {
 
     public void load(BookInventoryInfo[] inventory) {
         for (BookInventoryInfo bookInfo : inventory) {
-            this.inventory.put(bookInfo.getBookTitle(),bookInfo);
+            this.inventory.put(bookInfo.getBookTitle(), bookInfo);
         }
     }
 
     public OrderResult OrderResault(String book) {
-        /*if the book is not in stock*/
-        if (inventory.get(book).getAmountinInventory()<1)
+        /*if the book is not in stock or the book amount is under 1*/
+        if (!(inventory.containsKey(book)) || inventory.get(book).getAmountinInventory() < 1)
             return NOT_IN_STOCK;
         else {
             /*if the book is indeed in stock we will return it and decrement the amount by 1*/
             inventory.get(book).reduce();
             return SUCCESSFULLY_TAKEN;
         }
-
     }
-
-      /*  public int checkAvailabilityAndGetPrice(String book) {
-        for (BookInventoryInfo bookInfo : inventory) {
-            if (bookInfo.getBookTitle().equals(book)) {
-                if (bookInfo.getAmountinInventory() > 0) {
-                    return bookInfo.getPrice();
-                }
-            }
-        }
-        return -1;
-    }*/
 
     public int checkAvailabilityAndGetPrice(String book) {
         /*if the book is indeed in the inventory we will return its price, otherwise we will return -1*/
-        if (inventory.get(book).getAmountinInventory()>=1)
+        if (inventory.containsKey(book) && inventory.get(book).getAmountinInventory() >= 1)
             return inventory.get(book).getPrice();
         else return -1;
     }

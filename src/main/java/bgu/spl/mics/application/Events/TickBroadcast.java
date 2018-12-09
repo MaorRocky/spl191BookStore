@@ -1,4 +1,4 @@
-package bgu.spl.mics.Events;
+package bgu.spl.mics.application.Events;
 
 import bgu.spl.mics.Broadcast;
 

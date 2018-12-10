@@ -15,9 +15,12 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 
+
 public class InventoryService extends MicroService {
+    private Inventory inventory;
     public InventoryService() {
         super("InventoryService");
+        inventory = Inventory.getInstance();
 
     }
 

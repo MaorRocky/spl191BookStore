@@ -41,6 +41,7 @@ public class APIService extends MicroService {
                     OrderReceipt receipt = future.get();
                     if(receipt != null) {
                         customer.addReceipt(receipt);
+                        sendEvent(new DeliveryEvent(customer));
                     }
                 }
             }

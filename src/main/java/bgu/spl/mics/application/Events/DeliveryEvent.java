@@ -1,16 +1,18 @@
 package bgu.spl.mics.application.Events;
 import bgu.spl.mics.Event;
+import bgu.spl.mics.application.passiveObjects.Customer;
+
 public class DeliveryEvent implements Event {
-    private int customerId;
+    private Customer customer;
     private String address;
 
-    public DeliveryEvent(int customerId, String address) {
-        this.customerId = customerId;
-        this.address = address;
+    public DeliveryEvent(Customer customer) {
+        this.customer = customer;
+        this.address = customer.getAddress();
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public String getAddress() {

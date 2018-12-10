@@ -18,17 +18,23 @@ import bgu.spl.mics.MicroService;
 public class SellingService extends MicroService {
     private MoneyRegister moneyRegister;
 
+
     public SellingService() {
         super("SellingService");
         this.moneyRegister = MoneyRegister.getInstance();
     }
 
-    /*TODO we need to finish it*/
     @Override
     protected void initialize() {
         this.subscribeEvent(BookOrderEvent.class, event -> {
-            Future future = sendEvent(new CheckAvailability(event.getBookName()));
+            Future<Integer> future = sendEvent(new CheckAvailability(event.getBookName()));
+            Customer customer = event.getCustomer();
+            Integer price = future.get();
+            if (price != -1 && (customer.getAvailableCreditAmount() >= price)) {
+                moneyRegister.chargeCreditCard(customer, price);
 
+
+            }
         });
 
     }

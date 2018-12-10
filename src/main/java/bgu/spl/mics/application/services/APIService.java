@@ -38,13 +38,10 @@ public class APIService extends MicroService {
             for (BookOrderEvent order : orders) {
                 if (order.getExecuteTick() == broadcast.getTick()) {
                     Future<OrderReceipt> future = sendEvent(order);
-                    while (!future.isDone()) {
-                        try {
-                            sleep(100);
-                        } catch (InterruptedException e) {
-                        }
-                    }
+                    OrderReceipt orderReceipt = future.get();
+                    if (orderReceipt != null) {
 
+                    }
                 }
             }
         });

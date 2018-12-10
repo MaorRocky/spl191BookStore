@@ -34,9 +34,13 @@ public class Future<T> {
 	public T get() {
 		while (!isDone()) {
 			try {
-				sleep(10);
+				wait();
 			}
-			catch(InterruptedException e){}
+			catch(InterruptedException e){
+				if(isDone()) {
+					return result;
+				}
+			}
 		}
 		return result;
 	}
@@ -44,9 +48,9 @@ public class Future<T> {
 	/**
      * Resolves the result of this Future object.
      */
-	public void resolve (T result) {
+	public synchronized void resolve (T result) {
         this.result = result;
-        Thread.currentThread().interrupt();
+        notifyAll();
 	}
 	
 	/**
@@ -75,7 +79,9 @@ public class Future<T> {
 			unit.sleep(unit.toMillis(timeout));
 		}
 		catch (InterruptedException e){
-			return result;
+			if(result != null) {
+				return result;
+			}
 		}
 		return result;
 	}

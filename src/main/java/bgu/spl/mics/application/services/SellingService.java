@@ -37,6 +37,7 @@ public class SellingService extends MicroService {
                 OrderReceipt toAdd = new OrderReceipt(nextReceiptNumber, this.getName(), customer.getId(), event.getBookName(), price);
                 moneyRegister.file(toAdd);
                 nextReceiptNumber = nextReceiptNumber + 1;
+                sendEvent(new TakeBook(event.getBookName()));
                 complete(event, toAdd);
             }
             else {

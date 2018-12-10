@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
 /**
  * ResourceService is in charge of the store resources - the delivery vehicles.
@@ -22,7 +23,8 @@ public class ResourceService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+
+
 		
 	}
 

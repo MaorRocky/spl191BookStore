@@ -44,8 +44,8 @@ public class Inventory {
 	 *                  of the inventory.
 	 */
 	public void load(BookInventoryInfo[] inventory) {
-		for (BookInventoryInfo bookInfo : inventory) {
-			this.inventoryMap.put(bookInfo.getBookTitle(), bookInfo);
+		for (BookInventoryInfo bookInventoryInfo : inventory) {
+			this.inventoryMap.put(bookInventoryInfo.getBookTitle(), bookInventoryInfo);
 		}
 	}
 

@@ -16,9 +16,11 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class SellingService extends MicroService {
+    private MoneyRegister moneyRegister;
 
     public SellingService() {
         super("SellingService");
+        this.moneyRegister = MoneyRegister.getInstance();
     }
 
     /*TODO we need to finish it*/

@@ -35,8 +35,8 @@ public abstract class MicroService implements Runnable {
      */
     public MicroService(String name) {
         this.name = name;
-        bus = MessageBusImpl.getInstance();
-        callList = new ConcurrentHashMap<>();
+        this.bus = MessageBusImpl.getInstance();
+        this.callList = new ConcurrentHashMap<>();
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class MicroService implements Runnable {
     /**
      * this method is called once when the event loop starts.
      */
-    protected abstract void initialize();
+    protected abstract void     initialize();
 
     /**
      * Signals the event loop that it must terminate after handling the current

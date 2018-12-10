@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
-
 import java.util.concurrent.ConcurrentHashMap;
-
 import static bgu.spl.mics.application.passiveObjects.OrderResult.NOT_IN_STOCK;
 import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_TAKEN;
 
@@ -46,8 +44,8 @@ public class Inventory {
 	 *                  of the inventory.
 	 */
 	public void load(BookInventoryInfo[] inventory) {
-		for (BookInventoryInfo bookInfo : inventory) {
-			this.inventoryMap.put(bookInfo.getBookTitle(), bookInfo);
+		for (BookInventoryInfo bookInventoryInfo : inventory) {
+			this.inventoryMap.put(bookInventoryInfo.getBookTitle(), bookInventoryInfo);
 		}
 	}
 
@@ -71,8 +69,6 @@ public class Inventory {
 		}
 
 	}
-
-
 	/**
 	 * Checks if a certain book is available in the inventory.
 	 * <p>

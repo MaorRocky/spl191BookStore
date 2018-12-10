@@ -1,4 +1,6 @@
 package bgu.spl.mics.application.services;
+
+import bgu.spl.mics.Future;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.Events.*;
 import bgu.spl.mics.MicroService;
@@ -9,21 +11,26 @@ import bgu.spl.mics.MicroService;
  * Handles {@link BookOrderEvent}.
  * This class may not hold references for objects which it is not responsible for:
  * {@link ResourcesHolder}, {@link Inventory}.
- * 
+ * <p>
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class SellingService extends MicroService{
+public class SellingService extends MicroService {
+    private MoneyRegister moneyRegister;
 
-	public SellingService() {
-		super("Change_This_Name");
-		// TODO Implement this
-	}
+    public SellingService() {
+        super("SellingService");
+        this.moneyRegister = MoneyRegister.getInstance();
+    }
 
-	@Override
-	protected void initialize() {
-		// TODO Implement this
-		
-	}
+    /*TODO we need to finish it*/
+    @Override
+    protected void initialize() {
+        this.subscribeEvent(BookOrderEvent.class, event -> {
+            Future future = sendEvent(new CheckAvailability(event.getBookName()));
+
+        });
+
+    }
 
 }

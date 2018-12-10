@@ -5,7 +5,7 @@ import bgu.spl.mics.Event;
  * we will check if the book is available
  *
  * */
-public class CheckAvailability implements Event {
+public class CheckAvailability implements Event<Integer> {
 
     private String bookTitle;
 

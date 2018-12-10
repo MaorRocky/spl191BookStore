@@ -33,8 +33,6 @@ public class InventoryService extends MicroService {
         this.subscribeEvent(TakeBook.class, takeEvent -> {
             complete(takeEvent, Inventory.getInstance().take(takeEvent.getBookTitle()));
         });
-
-
     }
 
 

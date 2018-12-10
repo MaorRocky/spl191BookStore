@@ -1,8 +1,11 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import bgu.spl.mics.Future;
+import org.graalvm.util.Pair;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Passive object representing the resource manager.
@@ -18,7 +21,7 @@ public class ResourcesHolder {
         private static ResourcesHolder instance = new ResourcesHolder();
     }
 
-    private Collection<DeliveryVehicle> vehicles;
+    private ConcurrentHashMap<DeliveryVehicle, Boolean> vehicles;
 
     /**
      * Retrieves the single instance of this class.
@@ -57,7 +60,9 @@ public class ResourcesHolder {
      * @param vehicles Array of {@link DeliveryVehicle} instances to store.
      */
     public void load(DeliveryVehicle[] vehicles) {
-        //TODO: Implement this
+        for (DeliveryVehicle vehicle: vehicles) {
+
+        }
     }
 
 }

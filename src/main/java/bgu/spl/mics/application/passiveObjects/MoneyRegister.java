@@ -17,6 +17,7 @@ public class MoneyRegister {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
 	private LinkedList<OrderReceipt> receipts = new LinkedList<>();
+	private int nextReceiptNumber = 0;
 	
 	/**
      * Retrieves the single instance of this class.
@@ -50,8 +51,8 @@ public class MoneyRegister {
      * <p>
      * @param amount 	amount to charge
      */
-	public void chargeCreditCard(Customer c, int amount) {
-		// TODO Implement this
+	public void chargeCreditCard(Customer customer, int amount) {
+		customer.charge(amount);
 	}
 	
 	/**

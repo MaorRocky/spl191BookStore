@@ -18,6 +18,7 @@ import bgu.spl.mics.MicroService;
 
 public class InventoryService extends MicroService {
     private Inventory inventory;
+
     public InventoryService() {
         super("InventoryService");
         inventory = Inventory.getInstance();
@@ -27,14 +28,12 @@ public class InventoryService extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeEvent(CheckAvailability.class, checkEvent -> {
-            Integer price = Inventory.getInstance().checkAvailabiltyAndGetPrice(checkEvent.getBookTitle());
+            Integer price = inventory.checkAvailabiltyAndGetPrice(checkEvent.getBookTitle());
             complete(checkEvent, price);
         });
-        this.subscribeEvent(TakeBook.class, takeEvent -> {
-            complete(takeEvent, Inventory.getInstance().take(takeEvent.getBookTitle()));
+        this.subscribeEvent(TakeBook.class, takeBook -> {
+            complete(takeBook, inventory.take(takeBook.getBookTitle()));
         });
-
-
     }
 
 

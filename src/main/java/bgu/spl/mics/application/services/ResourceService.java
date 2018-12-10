@@ -12,10 +12,12 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class ResourceService extends MicroService{
+	private ResourcesHolder resources;
+
 
 	public ResourceService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("ResourceService");
+		resources = ResourcesHolder.getInstance();
 	}
 
 	@Override

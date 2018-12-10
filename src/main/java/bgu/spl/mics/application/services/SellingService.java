@@ -28,6 +28,7 @@ public class SellingService extends MicroService {
     protected void initialize() {
         this.subscribeEvent(BookOrderEvent.class, event -> {
             Future future = sendEvent(new CheckAvailability(event.getBookName()));
+
         });
 
     }

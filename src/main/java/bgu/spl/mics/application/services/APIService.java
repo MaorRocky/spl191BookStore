@@ -2,10 +2,10 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.Events.BookOrderEvent;
-import bgu.spl.mics.application.Events.TickBroadcast;
-import bgu.spl.mics.application.passiveObjects.Customer;
-import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.Events.*;
+import bgu.spl.mics.application.passiveObjects.*;
+
+
 
 import java.util.LinkedList;
 import java.util.List;

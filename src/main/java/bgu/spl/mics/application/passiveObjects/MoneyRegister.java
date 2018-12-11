@@ -17,7 +17,6 @@ public class MoneyRegister {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
 	private LinkedList<OrderReceipt> receipts = new LinkedList<>();
-	private int nextReceiptNumber = 0;
 	
 	/**
      * Retrieves the single instance of this class.

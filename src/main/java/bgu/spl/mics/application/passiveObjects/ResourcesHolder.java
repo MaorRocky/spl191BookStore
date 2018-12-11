@@ -2,7 +2,12 @@ package bgu.spl.mics.application.passiveObjects;
 
 import bgu.spl.mics.Future;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Passive object representing the resource manager.
@@ -18,7 +23,7 @@ public class ResourcesHolder {
         private static ResourcesHolder instance = new ResourcesHolder();
     }
 
-    private ConcurrentHashMap<DeliveryVehicle, Boolean> vehicles;
+    private BlockingQueue<DeliveryVehicle> vehicles = new LinkedBlockingQueue<>();
 
     /**
      * Retrieves the single instance of this class.
@@ -36,6 +41,13 @@ public class ResourcesHolder {
      * {@link DeliveryVehicle} when completed.
      */
     public Future<DeliveryVehicle> acquireVehicle() {
+        Future<DeliveryVehicle> future = new Future<>();
+        DeliveryVehicle vehicle = null;
+        try {
+            vehicle = vehicles.take();
+        }
+        catch (InterruptedException e){}
+        future.resolve(vehicle);
         return new Future<DeliveryVehicle>();
     }
 
@@ -47,7 +59,7 @@ public class ResourcesHolder {
      * @param vehicle {@link DeliveryVehicle} to be released.
      */
     public void releaseVehicle(DeliveryVehicle vehicle) {
-        //TODO: Implement this
+        vehicles.add(vehicle);
     }
 
     /**

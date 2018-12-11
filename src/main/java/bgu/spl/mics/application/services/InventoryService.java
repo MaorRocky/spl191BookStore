@@ -1,7 +1,7 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.application.Events.CheckAvailability;
-import bgu.spl.mics.application.Events.TakeBook;
+import bgu.spl.mics.application.Events.CheckAvailabilityEvent;
+import bgu.spl.mics.application.Events.TakeBookEvent;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.MicroService;
 
@@ -27,14 +27,15 @@ public class InventoryService extends MicroService {
 
     @Override
     protected void initialize() {
-        this.subscribeEvent(CheckAvailability.class, checkEvent -> {
+        this.subscribeEvent(CheckAvailabilityEvent.class, checkEvent -> {
             Integer price = inventory.checkAvailabiltyAndGetPrice(checkEvent.getBookTitle());
             complete(checkEvent, price);
         });
 
         /*TODO:should we return ENUM to the eventToResolveMap?*/
-        this.subscribeEvent(TakeBook.class, takeBook -> {
-            complete(takeBook, inventory.take(takeBook.getBookTitle()));
+        this.subscribeEvent(TakeBookEvent.class, takeBookEvent -> {
+            inventory.take(takeBookEvent.getBookTitle());
+            complete(takeBookEvent, inventory.take(takeBookEvent.getBookTitle()));
         });
     }
 

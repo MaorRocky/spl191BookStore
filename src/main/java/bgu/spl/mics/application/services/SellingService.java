@@ -27,12 +27,12 @@ public class SellingService extends MicroService {
 
     /*if the BookOrderEvent was committed as it should than we will add to the
      * resolve map OrderReceipt (toAdd) , else we will add Null.
-     * in addition we will send a new event to the messageBus - TakeBook*/
+     * in addition we will send a new event to the messageBus - TakeBookEvent*/
 
     @Override
     protected void initialize() {
         this.subscribeEvent(BookOrderEvent.class, event -> {
-            Future<Integer> future = sendEvent(new CheckAvailability(event.getBookName()));
+            Future<Integer> future = sendEvent(new CheckAvailabilityEvent(event.getBookName()));
             Customer customer = event.getCustomer();
             Integer price = future.get();
             if (price > -1 && customer.getAvailableCreditAmount() >= price) {
@@ -41,10 +41,16 @@ public class SellingService extends MicroService {
                         this.getName(), customer.getId(), event.getBookName(), price);
                 moneyRegister.file(toAdd);
                 nextReceiptNumber++;
-                sendEvent(new TakeBook(event.getBookName()));
+                sendEvent(new TakeBookEvent(event.getBookName()));
                 complete(event, toAdd);
             } else {
                 complete(event, null);
+            }
+        });
+
+        subscribeBroadcast(TickBroadcast.class, tick -> {
+            if (tick.isTermination()) {
+                terminate();
             }
         });
 

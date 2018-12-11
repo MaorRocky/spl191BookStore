@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.concurrent.*;
 
 
-
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
  * Write your implementation here!
@@ -112,7 +111,14 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
     @Override
     public void unregister(MicroService m) {
-        if (microServiceToMessageTypes.containsKey(m)) {
+        if (microServiceToMessageTypes.containsKey(m)) {// if m exist than he has a messageQueue
+            /*we will resolve all of his messages in his message queue to null*/
+            if (!microServiceToMessagesList.get(m).isEmpty()) {
+                for (Message message : microServiceToMessagesList.get(m)) {
+                    eventToResolveMap.get(message).resolve(null);
+                }
+            }
+
             for (Class<? extends Message> type : microServiceToMessageTypes.get(m)) {
                 if (eventTypeToMicroService.containsKey(type)) {
                     eventTypeToMicroService.get(type).remove(m);
@@ -120,9 +126,9 @@ public class MessageBusImpl<K, V> implements MessageBus {
                 if (broadcastTypeToMicroService.containsKey(type))
                     broadcastTypeToMicroService.get(type).remove(m);
             }
+            microServiceToMessagesList.remove(m);
+            microServiceToMessageTypes.remove(m);
         }
-        microServiceToMessagesList.remove(m);
-        microServiceToMessageTypes.remove(m);
     }
 
     @Override

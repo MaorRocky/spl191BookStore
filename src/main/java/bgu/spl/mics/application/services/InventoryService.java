@@ -31,6 +31,8 @@ public class InventoryService extends MicroService {
             Integer price = inventory.checkAvailabiltyAndGetPrice(checkEvent.getBookTitle());
             complete(checkEvent, price);
         });
+
+        /*TODO:should we return ENUM to the eventToResolveMap?*/
         this.subscribeEvent(TakeBook.class, takeBook -> {
             complete(takeBook, inventory.take(takeBook.getBookTitle()));
         });

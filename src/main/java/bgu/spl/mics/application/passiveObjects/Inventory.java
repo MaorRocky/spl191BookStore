@@ -17,7 +17,7 @@ import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_T
  */
 public class Inventory {
 
-	/*---------------------------------FIELDS-------------------------------------------*/
+	//---------------------------------FIELDS-------------------------------------------
 	private static class singletonHolder {
 		private static Inventory instance = new Inventory();
 	}
@@ -25,7 +25,7 @@ public class Inventory {
 	/*inventoryMap is a hashMap between book names --> BookInventoryInfo*/
 	private ConcurrentHashMap<String, BookInventoryInfo> inventoryMap;
 
-	/*---------------------------------END OF FIELDS-------------------------------------------*/
+	//---------------------------------END OF FIELDS-------------------------------------------
 
 
 	/**

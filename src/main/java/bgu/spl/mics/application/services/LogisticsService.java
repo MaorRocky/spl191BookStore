@@ -26,7 +26,5 @@ public class LogisticsService extends MicroService {
 			DeliveryVehicle vehicle = future.get();
 			vehicle.deliver(delivery.getCustomer().getAddress(), delivery.getCustomer().getDistance());
 		});
-		
 	}
-
 }

@@ -23,7 +23,5 @@ public class LogisticsService extends MicroService {
 		this.subscribeEvent(DeliveryEvent.class, delivery -> {
 			sendEvent(new SendDelivery(delivery.getAddress()));
 		});
-		
 	}
-
 }

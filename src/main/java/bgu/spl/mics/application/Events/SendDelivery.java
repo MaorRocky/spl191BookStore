@@ -1,8 +1,9 @@
 package bgu.spl.mics.application.Events;
 
 import bgu.spl.mics.Event;
+import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
-public class SendDelivery implements Event {
+public class SendDelivery implements Event<DeliveryVehicle> {
     private String addrees;
 
     public SendDelivery(String address) {

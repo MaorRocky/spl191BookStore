@@ -10,7 +10,7 @@ import java.util.TimerTask;
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
  * It keeps track of the amount of ticks passed since initialization and notifies
- * all other micro-services about the current time tick using {@link Tick Broadcast}.
+ * all other micro-services about the current time tick using {@link TickBroadcast}.
  * This class may not hold references for objects which it is not responsible for:
  * {@link ResourcesHolder}, {@link MoneyRegister}, {@link Inventory}.
  * <p>
@@ -34,9 +34,10 @@ public class TimeService extends MicroService {
 
     @Override
     protected void initialize() {
-        while (tickNumber <= duration) {
+        while (tickNumber < duration) {
             timer.schedule(new MyTimeTask(this), speed);
         }
+
         timer.purge();
         timer.cancel();
         terminate();
@@ -51,7 +52,11 @@ public class TimeService extends MicroService {
         tickNumber = tickNumber + 1;
     }
 
-    private class MyTimeTask extends TimerTask {
+    public int getDuration() {
+        return duration;
+    }
+
+    public class MyTimeTask extends TimerTask {
         private TimeService timer1;
 
         public MyTimeTask(TimeService timer1) {
@@ -59,7 +64,13 @@ public class TimeService extends MicroService {
         }
 
         public void run() {
-            TickBroadcast nextTick = new TickBroadcast(timer1.getTick());
+            TickBroadcast nextTick;
+            if (timer1.getTick() != timer1.getDuration()) {
+                nextTick = new TickBroadcast(timer1.getTick(), false);
+            }
+            else {
+                nextTick = new TickBroadcast(timer1.getTick(), true);
+            }
             timer1.sendBroadcast(nextTick);
             timer1.nextTick();
         }

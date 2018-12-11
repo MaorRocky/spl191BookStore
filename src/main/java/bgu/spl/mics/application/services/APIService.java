@@ -35,15 +35,20 @@ public class APIService extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TickBroadcast.class, (TickBroadcast broadcast) -> {
-            for (BookOrderEvent order : orders) {
-                if (order.getExecuteTick() == broadcast.getTick()) {
-                    Future<OrderReceipt> future = sendEvent(order);
-                    OrderReceipt receipt = future.get();
-                    if(receipt != null) {
-                        customer.addReceipt(receipt);
-                        sendEvent(new DeliveryEvent(customer));
+            if (!broadcast.isTermination()) {
+                for (BookOrderEvent order : orders) {
+                    if (order.getExecuteTick() == broadcast.getTick()) {
+                        Future<OrderReceipt> future = sendEvent(order);
+                        OrderReceipt receipt = future.get();
+                        if(receipt != null) {
+                            customer.addReceipt(receipt);
+                            sendEvent(new DeliveryEvent(customer));
+                        }
                     }
                 }
+            }
+            else {
+                terminate();
             }
         });
 

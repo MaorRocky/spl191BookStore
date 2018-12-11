@@ -112,12 +112,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
     @Override
     public void unregister(MicroService m) {
-        while (!microServiceToMessagesList.get(m).isEmpty()) {
-            try {
-                awaitMessage(m);
-            } catch (InterruptedException e) {
-            }
-        }
         if (microServiceToMessageTypes.containsKey(m)) {
             for (Class<? extends Message> type : microServiceToMessageTypes.get(m)) {
                 if (eventTypeToMicroService.containsKey(type)) {

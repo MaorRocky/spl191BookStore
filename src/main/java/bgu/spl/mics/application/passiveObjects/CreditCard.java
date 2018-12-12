@@ -23,6 +23,6 @@ public class CreditCard {
         int oldBalance;
         do {
             oldBalance = this.getCreditBalance();
-        } while (!this.creditBalance.compareAndSet(oldBalance, price));
+        } while (!this.creditBalance.compareAndSet(oldBalance, this.getCreditBalance() - price));
     }
 }

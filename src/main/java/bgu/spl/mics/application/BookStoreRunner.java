@@ -2,10 +2,12 @@ package bgu.spl.mics.application;
 
 
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
+import bgu.spl.mics.application.passiveObjects.Inventory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,22 +20,26 @@ import java.io.IOException;
 public class BookStoreRunner {
     public static void main(String[] args) {
         JsonObject jsonObject = new JsonObject();
-        JsonParser parser = new JsonParser();
+        JsonParser jsonParser = new JsonParser();
         try {
-            jsonObject = parser.parse(new FileReader(args[0])).getAsJsonObject();
+            jsonObject = jsonParser.parse(new FileReader(args[0])).getAsJsonObject();
         } catch (IOException e) {
         }
-        JsonArray jsonArray = jsonObject.get("initialInventory").getAsJsonArray();
-        BookInventoryInfo[] intitalLoad = new BookInventoryInfo[];
-        for (JsonElement element : jsonArray) {
+        JsonArray jsonInitialInventoryArray = jsonObject.get("initialInventory").getAsJsonArray();
+        BookInventoryInfo[] initialLoad = new BookInventoryInfo[jsonInitialInventoryArray.size()];
+        for (JsonElement element : jsonInitialInventoryArray) {
             int i = 0;
             String bookTitle = element.getAsJsonObject().get("bookTitle").getAsString();
             int amount = element.getAsJsonObject().get("amount").getAsInt();
             int price = element.getAsJsonObject().get("price").getAsInt();
-            BookInventoryInfo tempBookinfo = new BookInventoryInfo(bookTitle, amount, price);
-            intitalLoad[i] = tempBookinfo;
+            BookInventoryInfo tempBookInfo = new BookInventoryInfo(bookTitle, amount, price);
+            initialLoad[i] = tempBookInfo;
             i++;
-
         }
+        Inventory.getInstance().load(initialLoad);
     }
 }
+
+
+
+

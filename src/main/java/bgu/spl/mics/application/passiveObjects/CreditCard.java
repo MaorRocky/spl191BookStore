@@ -1,14 +1,12 @@
 package bgu.spl.mics.application.passiveObjects;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class CreditCard {
     private int creditCardIdNumber;
-    private AtomicInteger creditBalance;
+    private int creditBalance;
 
     public CreditCard(int creditCardIdNumber, int creditBalance) {
         this.creditCardIdNumber = creditCardIdNumber;
-        this.creditBalance = new AtomicInteger(creditBalance);
+        this.creditBalance = creditBalance;
     }
 
     public int getCreditCardIdNumber() {
@@ -16,13 +14,10 @@ public class CreditCard {
     }
 
     public int getCreditBalance() {
-        return creditBalance.get();
+        return creditBalance;
     }
 
     public void chargeCreditCard(int price) {
-        int oldBalance;
-        do {
-            oldBalance = this.getCreditBalance();
-        } while (!this.creditBalance.compareAndSet(oldBalance, this.getCreditBalance() - price));
+        this.creditBalance = creditBalance - price;
     }
 }

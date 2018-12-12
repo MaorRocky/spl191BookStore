@@ -1,4 +1,5 @@
 package bgu.spl.mics.application;
+
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.*;
@@ -7,7 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-/** This is the Main class of the application. You should parse the input file,
+/**
+ * This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output serialized objects.
  */
@@ -23,21 +25,25 @@ public class BookStoreRunner {
         //-------------------------- initialInventory --------------------------
 
         JsonArray initialInventoryArray = rootObject.getAsJsonArray("initialInventory");
-        BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray,BookInventoryInfo[].class);
+        BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray, BookInventoryInfo[].class);
         Inventory.getInstance().load(bookInventoryInfo);
 
         //-------------------------- initialResources --------------------------
 
         JsonArray initialResources = rootObject.getAsJsonArray("initialResources");
-        JsonObject jsonObject =  initialResources.get(0).getAsJsonObject();
+        JsonObject jsonObject = initialResources.get(0).getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
-        DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray,DeliveryVehicle[].class);
+        DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
         ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
         resourcesHolder.load(deliveryVehicles);
 
         //-------------------------- Services Object --------------------------
 
         JsonObject jsonServicesObj = rootObject.getAsJsonObject("services");
+
+        //-------------------------- inventory service --------------------------
+
+        JsonPrimitive jsonPrimitive = jsonServicesObj.getAsJsonPrimitive("inventoryService");
 
         //--------------------- selling ---------------------
 
@@ -62,8 +68,16 @@ public class BookStoreRunner {
         //--------------------- customers ---------------------
 
         JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
-        Customer [] customersArr = gson.fromJson(customers,Customer[].class);
+        Customer[] customersArr = gson.fromJson(customers, Customer[].class);
+        for (Customer customer : customersArr
+        ) {
+            System.out.println(customer.getAvailableCreditAmount());
+            System.out.println(customer.getCreditNumber());
+            System.out.println(customer.getAddress());
+            System.out.println(customer.getId());
 
+
+        }
 
     }
 }

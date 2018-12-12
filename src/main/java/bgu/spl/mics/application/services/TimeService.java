@@ -40,7 +40,7 @@ public class TimeService extends MicroService {
             try {
                 sleep(speed);
             } catch (InterruptedException e) {}
-            tickNumber = tickNumber + 1;
+            tickNumber++;
         }
         TickBroadcast lastTick = new TickBroadcast(duration, true);
         sendBroadcast(lastTick);

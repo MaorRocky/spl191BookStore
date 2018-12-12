@@ -24,7 +24,7 @@ public class Inventory {
     }
 
     /*inventoryMap is a hashMap between book names --> BookInventoryInfo*/
-    private ConcurrentHashMap<String, BookInventoryInfo> inventoryMap;
+    private ConcurrentHashMap<String, BookInventoryInfo> inventoryMap = new ConcurrentHashMap<>();
 
     //---------------------------------END OF FIELDS-------------------------------------------
 

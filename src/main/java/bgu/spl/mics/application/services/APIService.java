@@ -27,9 +27,7 @@ public class APIService extends MicroService {
         super(name);
         this.customer = customer;
         this.orders = new LinkedList<BookOrderEvent>();
-        for (BookOrderEvent order : orders) {
-            this.orders.add(order);
-        }
+        this.orders.addAll(orders);
     }
 
     @Override

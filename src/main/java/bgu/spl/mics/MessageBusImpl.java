@@ -55,8 +55,8 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 
     @Override
-    public void   subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-        if (microServiceToMessagesList.containsKey(m)) {
+    public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
+        if (microServiceToMessagesList.containsKey(m)) { // if "m" exist
             if (!broadcastTypeToMicroService.containsKey(type)) {
                 broadcastTypeToMicroService.put(type, new LinkedList<>());
             }
@@ -77,9 +77,11 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
     @Override
     public void sendBroadcast(Broadcast b) {
-        if (broadcastTypeToMicroService.containsKey(b.getClass())) {
-            for (MicroService service : broadcastTypeToMicroService.get(b.getClass())) {
-                microServiceToMessagesList.get(service).add(b);
+        synchronized (broadcastTypeToMicroService.get(b.getClass())) {
+            if (broadcastTypeToMicroService.containsKey(b.getClass())) {
+                for (MicroService service : broadcastTypeToMicroService.get(b.getClass())) {
+                    microServiceToMessagesList.get(service).add(b);
+                }
             }
         }
     }
@@ -88,15 +90,17 @@ public class MessageBusImpl<K, V> implements MessageBus {
     @Override
     public <T> Future<T> sendEvent(Event<T> e) {
         Future<T> future = new Future<>();
-        if (!eventTypeToMicroService.containsKey(e.getClass()) || eventTypeToMicroService.get(e.getClass()).isEmpty()) {
-            return null;
-        } else {
-            synchronized (eventToResolveMap) {
-                MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
-                microServiceToMessagesList.get(next).add(e);
-                eventTypeToMicroService.get(e.getClass()).addLast(next);
-                eventToResolveMap.put(e, future);
-                return future;
+        synchronized (eventTypeToMicroService.get(e.getClass())) {
+            if (!eventTypeToMicroService.containsKey(e.getClass()) || eventTypeToMicroService.get(e.getClass()).isEmpty()) {
+                return null;
+            } else {
+                synchronized (eventToResolveMap) {
+                    MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
+                    microServiceToMessagesList.get(next).add(e);
+                    eventTypeToMicroService.get(e.getClass()).addLast(next);
+                    eventToResolveMap.put(e, future);
+                    return future;
+                }
             }
         }
     }
@@ -113,6 +117,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
     public void unregister(MicroService m) {
         if (microServiceToMessageTypes.containsKey(m)) {// if m exist than he has a messageQueue
             /*we will resolve all of his messages in his message queue to null*/
+
             if (!microServiceToMessagesList.get(m).isEmpty()) {
                 for (Message message : microServiceToMessagesList.get(m)) {
                     eventToResolveMap.get(message).resolve(null);
@@ -121,10 +126,15 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
             for (Class<? extends Message> type : microServiceToMessageTypes.get(m)) {
                 if (eventTypeToMicroService.containsKey(type)) {
-                    eventTypeToMicroService.get(type).remove(m);
+                    synchronized (eventTypeToMicroService.get(type)) {
+                        eventTypeToMicroService.get(type).remove(m);
+                    }
                 }
-                if (broadcastTypeToMicroService.containsKey(type))
-                    broadcastTypeToMicroService.get(type).remove(m);
+                if (broadcastTypeToMicroService.containsKey(type)) {
+                    synchronized (broadcastTypeToMicroService.get(type)) {
+                        broadcastTypeToMicroService.get(type).remove(m);
+                    }
+                }
             }
             microServiceToMessagesList.remove(m);
             microServiceToMessageTypes.remove(m);

@@ -8,14 +8,15 @@ package bgu.spl.mics.application.passiveObjects;
  * You may add fields and methods to this class as you see fit (including public methods).
  */
 public class BookInventoryInfo {
+	//TODO use a semaphore in case number of threads want to take the same book
 	
 	private String bookTitle;
-	private int amountInInventory;
+	private int amount;
 	private int price;
 
-	public BookInventoryInfo(String name, int amount, int price) {
-		bookTitle = name;
-		amountInInventory = amount;
+	public BookInventoryInfo(String bookTitle, int amount, int price) {
+		this.bookTitle = bookTitle;
+		this.amount = amount;
 		this.price = price;
 	}
 
@@ -33,8 +34,8 @@ public class BookInventoryInfo {
      * <p>
      * @return amount of available books.      
      */
-	public synchronized int getAmountInInventory() {
-		return amountInInventory;
+	public synchronized int getAmount() {
+		return amount;
 	}
 
 	/**
@@ -47,8 +48,8 @@ public class BookInventoryInfo {
 	}
 
 	public synchronized boolean reduce () {
-		if (getAmountInInventory() > 0) {
-			amountInInventory = amountInInventory - 1;
+		if (getAmount() > 0) {
+			amount = amount - 1;
 			return true;
 		}
 		return false;

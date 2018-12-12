@@ -70,7 +70,7 @@ public class ResourcesHolder {
      */
     public void load(DeliveryVehicle[] vehicles) {
         for (DeliveryVehicle vehicle : vehicles) {
-
+            this.vehicles.add(vehicle);
         }
     }
 

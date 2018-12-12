@@ -20,8 +20,8 @@ public class ResourceService extends MicroService{
 	private ResourcesHolder resources;
 
 
-	public ResourceService() {
-		super("ResourceService");
+	public ResourceService(String name) {
+		super(name);
 		resources = ResourcesHolder.getInstance();
 	}
 

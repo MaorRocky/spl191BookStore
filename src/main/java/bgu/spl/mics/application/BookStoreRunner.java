@@ -1,16 +1,12 @@
 package bgu.spl.mics.application;
 
+import bgu.spl.mics.application.passiveObjects.*;
+import bgu.spl.mics.application.services.TimeService;
+import com.google.gson.*;
 
-import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
-import bgu.spl.mics.application.passiveObjects.Inventory;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.sun.xml.internal.bind.v2.TODO;
-
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * This is the Main class of the application. You should parse the input file,
@@ -19,34 +15,59 @@ import java.io.IOException;
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-        JsonObject jsonObject = new JsonObject();
-        JsonParser jsonParser = new JsonParser();
-        try {
-            jsonObject = jsonParser.parse(new FileReader(args[0])).getAsJsonObject();
-        } catch (IOException e) {
-        }
-        JsonArray jsonInitialInventoryArray = jsonObject.get("initialInventory").getAsJsonArray();
-        BookInventoryInfo[] initialLoad = new BookInventoryInfo[jsonInitialInventoryArray.size()];
-        for (JsonElement element : jsonInitialInventoryArray) {
-            int i = 0;
-            String bookTitle = element.getAsJsonObject().get("bookTitle").getAsString();
-            int amount = element.getAsJsonObject().get("amount").getAsInt();
-            int price = element.getAsJsonObject().get("price").getAsInt();
-            BookInventoryInfo tempBookInfo = new BookInventoryInfo(bookTitle, amount, price);
-            initialLoad[i] = tempBookInfo;
-            i++;
-        }
-        Inventory.getInstance().load(initialLoad);
-    }
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        InputStream inputStream = BookStoreRunner.class.getClassLoader().getResourceAsStream("input.json");
+        Reader reader = new InputStreamReader(inputStream);
+        JsonElement rootElement = parser.parse(reader);
+        JsonObject rootObject = rootElement.getAsJsonObject();
 
-    public static BookInventoryInfo[] getInventory() {
-        BookInventoryInfo[] bookInventoryInfos = new BookInventoryInfo[];
-        /*TODO set size*/
+        //-------------------------- initialInventory --------------------------
 
-        return bookInventoryInfos;
+        JsonArray initialInventoryArray = rootObject.getAsJsonArray("initialInventory");
+        BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray, BookInventoryInfo[].class);
+        Inventory.getInstance().load(bookInventoryInfo);
+
+        //-------------------------- initialResources --------------------------
+
+        JsonArray initialResources = rootObject.getAsJsonArray("initialResources");
+        JsonObject jsonObject = initialResources.get(0).getAsJsonObject();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
+        DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
+        ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
+        resourcesHolder.load(deliveryVehicles);
+
+        //-------------------------- Services Object --------------------------
+
+        JsonObject jsonServicesObj = rootObject.getAsJsonObject("services");
+
+        //-------------------------- inventory service --------------------------
+
+        JsonPrimitive jsonPrimitive = jsonServicesObj.getAsJsonPrimitive("inventoryService");
+
+        //--------------------- selling ---------------------
+
+        JsonPrimitive sellingNum = jsonServicesObj.getAsJsonPrimitive("selling");
+        int sellingNumber = sellingNum.getAsInt();
+
+        //--------------------- time ---------------------
+
+        JsonObject jsonTimeObject = jsonServicesObj.getAsJsonObject("time");
+        TimeService timeService = gson.fromJson(jsonTimeObject, TimeService.class);
+
+        //--------------------- logistics ---------------------
+
+        JsonPrimitive logistics = jsonServicesObj.getAsJsonPrimitive("logistics");
+        int logisticsNumber = logistics.getAsInt();
+
+        //--------------------- resource service ---------------------
+
+        JsonPrimitive resourcesService = jsonServicesObj.getAsJsonPrimitive("resourcesService");
+        int resourceServiceNum = resourcesService.getAsInt();
+
+        //--------------------- customers ---------------------
+
+        JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
+        Customer[] customersArr = gson.fromJson(customers, Customer[].class);
     }
 }
-
-
-
-

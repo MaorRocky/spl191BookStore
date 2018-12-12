@@ -27,15 +27,17 @@ public class APIService extends MicroService {
         super(name);
         this.customer = customer;
         this.orders = new LinkedList<BookOrderEvent>();
-        this.orders.addAll(orders);
+        for (BookOrderEvent order : orders) {
+            this.orders.add(order);
+        }
     }
 
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TickBroadcast.class, broadcast -> {
             if (!broadcast.isTermination()) {
-                for (BookOrderEvent order : this.orders) {
-                    if (order.getExecuteTick() == broadcast.getTick()) {
+                for (BookOrderEvent order : orders) {
+                    if (order.getExecuteTick() <= broadcast.getTick()) {
                         Future<OrderReceipt> future = sendEvent(order);
                         OrderReceipt receipt = future.get();
                         if (receipt != null) {
@@ -48,5 +50,7 @@ public class APIService extends MicroService {
                 terminate();
             }
         });
+
     }
+
 }

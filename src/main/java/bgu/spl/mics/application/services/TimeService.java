@@ -3,9 +3,9 @@ import bgu.spl.mics.application.passiveObjects.*;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.Events.TickBroadcast;
-
 import java.util.Timer;
-import java.util.TimerTask;
+
+import static java.lang.Thread.sleep;
 
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
@@ -35,14 +35,27 @@ public class TimeService extends MicroService {
     @Override
     protected void initialize() {
         while (tickNumber < duration) {
+            TickBroadcast tick = new TickBroadcast(tickNumber, false);
+            sendBroadcast(tick);
+            try {
+                sleep(speed);
+            } catch (InterruptedException e) {}
+            tickNumber++;
+        }
+        TickBroadcast lastTick = new TickBroadcast(duration, true);
+        sendBroadcast(lastTick);
+        terminate();
+    }
+
+
+        /*while (tickNumber < duration) {
             timer.schedule(new MyTimeTask(this), speed);
         }
-
         timer.purge();
         timer.cancel();
         terminate();
 
-    }
+
 
     public int getTick() {
         return this.tickNumber;
@@ -74,6 +87,6 @@ public class TimeService extends MicroService {
             timer1.sendBroadcast(nextTick);
             timer1.nextTick();
         }
-    }
+    }*/
 
 }

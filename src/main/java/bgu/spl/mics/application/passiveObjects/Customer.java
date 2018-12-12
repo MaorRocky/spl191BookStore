@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import bgu.spl.mics.application.passiveObjects.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,4 +97,11 @@ public class Customer {
         receiptList.add(r);
     }
 
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public Vector<orderSchedule> getOrderSchedule() {
+        return orderSchedule;
+    }
 }

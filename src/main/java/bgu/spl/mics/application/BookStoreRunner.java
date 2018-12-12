@@ -4,9 +4,7 @@ import bgu.spl.mics.application.Events.BookOrderEvent;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
 
-import java.io.FileReader;
 import java.util.LinkedList;
 
 /**
@@ -56,7 +54,11 @@ public class BookStoreRunner {
         //Creating API services
         APIService[] apiServices = new APIService[Data.services.customers.length];
         for (int i = 0; i < apiServices.length; i++) {
-            Customer tmpCustomer = new Customer(Data.services.customers[i].id, Data.services.customers[i].name, Data.services.customers[i].address, Data.services.customers[i].distance, Data.services.customers[i].creditCard);
+            Customer tmpCustomer = new Customer(Data.services.customers[i].id,
+                    Data.services.customers[i].name,
+                    Data.services.customers[i].address,
+                    Data.services.customers[i].distance,
+                    Data.services.customers[i].creditCard);
             String tmpName = "APIService " + i;
             LinkedList<BookOrderEvent> list = new LinkedList<>();
             for (int j = 0; j < Data.services.customers[i].orderSchedule.length; j++) {

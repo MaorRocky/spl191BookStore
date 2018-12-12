@@ -3,9 +3,7 @@ import bgu.spl.mics.application.passiveObjects.*;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.Events.TickBroadcast;
-
 import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.lang.Thread.sleep;
 

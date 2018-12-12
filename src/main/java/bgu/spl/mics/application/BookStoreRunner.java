@@ -38,6 +38,13 @@ public class BookStoreRunner {
         }
         Inventory.getInstance().load(initialLoad);
     }
+
+    public static BookInventoryInfo[] getInventory() {
+        BookInventoryInfo[] bookInventoryInfos = new BookInventoryInfo[];
+        /*TODO set size*/
+
+        return bookInventoryInfos;
+    }
 }
 
 

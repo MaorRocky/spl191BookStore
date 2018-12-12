@@ -15,8 +15,8 @@ import bgu.spl.mics.MicroService;
  */
 public class LogisticsService extends MicroService {
 
-	public LogisticsService() {
-		super("LogisticService");
+	public LogisticsService(String name) {
+		super(name);
 	}
 
 	@Override

@@ -19,8 +19,8 @@ public class SellingService extends MicroService {
     private MoneyRegister moneyRegister;
     int nextReceiptNumber;
 
-    public SellingService() {
-        super("SellingService");
+    public SellingService(String name) {
+        super(name);
         this.moneyRegister = MoneyRegister.getInstance();
         nextReceiptNumber = 0;
     }

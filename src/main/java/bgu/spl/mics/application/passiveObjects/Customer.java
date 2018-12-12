@@ -18,13 +18,13 @@ public class Customer {
 	private int creditCard;
 	private Integer availableAmountInCreditCard;
 
-	public Customer(int id, String name, String address, int distance, int creditCard, int availableAmountInCreditCard) {
+	public Customer(int id, String name, String address, int distance, CreditCard card) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.distance = distance;
-		this.creditCard = creditCard;
-		this.availableAmountInCreditCard = availableAmountInCreditCard;
+		this.creditCard = card.getNumber();
+		this.availableAmountInCreditCard = card.getAmountOnCard();
 		receiptList = new LinkedList<OrderReceipt>();
 	}
 

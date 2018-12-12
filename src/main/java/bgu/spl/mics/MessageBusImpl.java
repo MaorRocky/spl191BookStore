@@ -55,7 +55,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
 
     @Override
-    public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
+    public void   subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
         if (microServiceToMessagesList.containsKey(m)) {
             if (!broadcastTypeToMicroService.containsKey(type)) {
                 broadcastTypeToMicroService.put(type, new LinkedList<>());

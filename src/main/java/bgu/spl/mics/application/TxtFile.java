@@ -28,7 +28,7 @@ public class TxtFile {
             "        \"name\": \"Bruria\",\n" +
             "        \"address\": \"NewYork 123\",\n" +
             "        \"distance\":33,\n" +
-            "        \"creditCard\":{\"number\":67890,\"amount\":88},\n" +
+            "        \"CreditCard\":{\"number\":67890,\"amount\":88},\n" +
             "        \"orderSchedule\": [\n" +
             "            {\"bookTitle\": \"Harry Poter\", \"tick\": 3},\n" +
             "            {\"bookTitle\": \"The Hunger Games\", \"tick\": 3}\n" +
@@ -39,7 +39,7 @@ public class TxtFile {
             "        \"name\": \"Shraga\",\n" +
             "        \"address\": \"BeerSheva 3333\",\n" +
             "        \"distance\":12,\n" +
-            "         \"creditCard\":{\"number\":453536,\"amount\":220},\n" +
+            "         \"CreditCard\":{\"number\":453536,\"amount\":220},\n" +
             "    \"orderSchedule\": [\n" +
             "        {\"bookTitle\": \"The Hunger Games\", \"tick\": 12}\n" +
             "    ]\n" +

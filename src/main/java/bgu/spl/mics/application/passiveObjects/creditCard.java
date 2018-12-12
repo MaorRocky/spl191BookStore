@@ -1,10 +1,10 @@
 package bgu.spl.mics.application.passiveObjects;
 
-public class CreditCard {
+public class creditCard {
     private int number;
     private int amountOnCard;
 
-    public CreditCard(int number, int amountOnCard) {
+    public creditCard(int number, int amountOnCard) {
         this.number = number;
         this.amountOnCard = amountOnCard;
     }

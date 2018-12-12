@@ -1,7 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Passive data-object representing a customer of the store.
@@ -17,15 +19,17 @@ public class Customer {
 	private List<OrderReceipt> receiptList;
 	private int creditCard;
 	private Integer availableAmountInCreditCard;
+	private Vector<orderSchedule> orderSchedule;
 
-	public Customer(int id, String name, String address, int distance, CreditCard card) {
+	public Customer(int id, String name, String address, int distance, creditCard card,orderSchedule[] orderSchedules) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.distance = distance;
 		this.creditCard = card.getNumber();
 		this.availableAmountInCreditCard = card.getAmountOnCard();
-		receiptList = new LinkedList<OrderReceipt>();
+		receiptList = new LinkedList<>();
+		this.orderSchedule.addAll(Arrays.asList(orderSchedules));
 	}
 
 	/**

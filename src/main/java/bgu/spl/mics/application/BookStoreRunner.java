@@ -62,7 +62,8 @@ public class BookStoreRunner {
             String tmpName = "APIService " + i;
             LinkedList<BookOrderEvent> list = new LinkedList<>();
             for (int j = 0; j < Data.services.customers[i].orderSchedule.length; j++) {
-                list.add(new BookOrderEvent(Data.services.customers[i].orderSchedule[j].bookTitle, tmpCustomer, Data.services.customers[i].orderSchedule[j].tick));
+                list.add(new BookOrderEvent(Data.services.customers[i].orderSchedule[j]
+                        .bookTitle, tmpCustomer, Data.services.customers[i].orderSchedule[j].tick));
             }
             apiServices[i] = new APIService(tmpName, tmpCustomer, list);
         }

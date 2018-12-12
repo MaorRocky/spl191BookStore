@@ -1,109 +1,73 @@
 package bgu.spl.mics.application;
-
-import bgu.spl.mics.application.Events.BookOrderEvent;
 import bgu.spl.mics.application.passiveObjects.*;
-import bgu.spl.mics.application.services.*;
+import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.*;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.LinkedList;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
-/**
- * This is the Main class of the application. You should parse the input file,
+/** This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output serialized objects.
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-        try {
-            byte[] byteInput = Files.readAllBytes(Paths.get(args[0]));
-            String stringInput = new String(byteInput);
-            Gson gson = new Gson();
-            Data data = new Gson().fromJson((args[0]), Data.class);
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        InputStream inputStream = BookStoreRunner.class.getClassLoader().getResourceAsStream("input.json");
+        Reader reader = new InputStreamReader(inputStream);
+        JsonElement rootElement = parser.parse(reader);
+        JsonObject rootObject = rootElement.getAsJsonObject();
 
-            //Loading the inventory
-            Inventory.getInstance().load(Data.initialInventory);
+        //-------------------------- initialInventory --------------------------
 
-            //Loading the resources holder
-            ResourcesHolder.getInstance().load(Data.initialResources[0].vehicles);
+        JsonArray initialInventoryArray = rootObject.getAsJsonArray("initialInventory");
+        BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray,BookInventoryInfo[].class);
+        Inventory.getInstance().load(bookInventoryInfo);
 
-            //Creating the time service
-            TimeService timer = Data.services.time;
+        //-------------------------- initialResources --------------------------
 
-            //Creating selling services
-            SellingService[] selling = new SellingService[Data.services.selling];
-            for (int i = 0; i < selling.length; i++) {
-                selling[i] = new SellingService("SellingService " + i);
-            }
+        JsonArray initialResources = rootObject.getAsJsonArray("initialResources");
+        JsonObject jsonObject =  initialResources.get(0).getAsJsonObject();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
+        DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray,DeliveryVehicle[].class);
+        ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
+        resourcesHolder.load(deliveryVehicles);
 
-            //Creating inventory services
-            InventoryService[] inventories = new InventoryService[Data.services.inventoryService];
-            for (int i = 0; i < inventories.length; i++) {
-                inventories[i] = new InventoryService("InventoryService " + i);
-            }
+        //-------------------------- Services Object --------------------------
 
-            //Creating logistics services
-            LogisticsService[] logisticsServices = new LogisticsService[Data.services.logistics];
-            for (int i = 0; i < logisticsServices.length; i++) {
-                logisticsServices[i] = new LogisticsService("LogisticsService " + i);
-            }
+        JsonObject jsonServicesObj = rootObject.getAsJsonObject("services");
 
-            //Creating resource services
-            ResourceService[] resources = new ResourceService[Data.services.resourcesService];
-            for (int i = 0; i < resources.length; i++) {
-                resources[i] = new ResourceService("ResourceService " + i);
-            }
+        //--------------------- selling ---------------------
 
-            //Creating API services
-            APIService[] apiServices = new APIService[Data.services.customers.length];
-            for (int i = 0; i < apiServices.length; i++) {
-                Customer tmpCustomer = new Customer(Data.services.customers[i].id,
-                        Data.services.customers[i].name,
-                        Data.services.customers[i].address,
-                        Data.services.customers[i].distance,
-                        Data.services.customers[i].creditCard);
-                String tmpName = "APIService " + i;
-                LinkedList<BookOrderEvent> list = new LinkedList<>();
-                for (int j = 0; j < Data.services.customers[i].orderSchedule.length; j++) {
-                    list.add(new BookOrderEvent(Data.services.customers[i].orderSchedule[j]
-                            .bookTitle, tmpCustomer, Data.services.customers[i].orderSchedule[j].tick));
-                }
-                apiServices[i] = new APIService(tmpName, tmpCustomer, list);
-            }
-        } catch (Exception e){}
-    }
+        JsonPrimitive sellingNum = jsonServicesObj.getAsJsonPrimitive("selling");
+        int sellingNumber = sellingNum.getAsInt();
 
-    public static class Data {
-        public static BookInventoryInfo[] initialInventory;
-        public static MyResources[] initialResources;
-        public static MyServices services;
+        //--------------------- time ---------------------
 
-        public static class MyResources {
-            public static DeliveryVehicle[] vehicles;
-        }
+        JsonObject jsonTimeObject = jsonServicesObj.getAsJsonObject("time");
+        TimeService timeService = gson.fromJson(jsonTimeObject, TimeService.class);
 
-        public static class MyServices {
-            public TimeService time;
-            public int selling;
-            public int inventoryService;
-            public int logistics;
-            public int resourcesService;
-            public JsonCustomer[] customers;
+        //--------------------- logistics ---------------------
 
-            public class JsonCustomer {
-                public int id;
-                public String name;
-                public String address;
-                public int distance;
-                public CreditCard creditCard;
-                public Order[] orderSchedule;
+        JsonPrimitive logistics = jsonServicesObj.getAsJsonPrimitive("logistics");
+        int logisticsNumber = logistics.getAsInt();
 
-                public class Order {
-                    public String bookTitle;
-                    public int tick;
-                }
-            }
+        //--------------------- resource service ---------------------
+
+        JsonPrimitive resourcesService = jsonServicesObj.getAsJsonPrimitive("resourcesService");
+        int resourceServiceNum = resourcesService.getAsInt();
+
+        //--------------------- customers ---------------------
+
+        JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
+        Customer [] customersArr = gson.fromJson(customers,Customer[].class);
+
+        for (Customer customer:customersArr) {
+            System.out.println(customer.getAddress());
+            System.out.println(customer.getId());
+
         }
     }
 }

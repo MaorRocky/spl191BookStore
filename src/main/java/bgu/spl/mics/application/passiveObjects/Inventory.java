@@ -96,5 +96,4 @@ public class Inventory {
     public void printInventoryToFile(String filename) {
         //TODO: Implement this
     }
-
 }

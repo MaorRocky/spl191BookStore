@@ -1,7 +1,6 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.passiveObjects.*;
-import bgu.spl.mics.application.services.InventoryService;
 import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.*;
 

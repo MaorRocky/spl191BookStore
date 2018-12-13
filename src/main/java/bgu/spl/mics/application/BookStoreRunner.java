@@ -71,6 +71,7 @@ public class BookStoreRunner {
         Customer[] customersArr = gson.fromJson(customers, Customer[].class);
 
         /*test for customers*/
+        System.out.println("********test for customers********");
         for (Customer customer:customersArr
              ) {
             System.out.println(customer.getId());
@@ -81,6 +82,10 @@ public class BookStoreRunner {
             System.out.println(customer.getCreditCard().getCreditBalance());
             System.out.println("************");
         }
+        /*test for timeService*/
+        System.out.println("tetst for timeservice");
+        System.out.println(timeService.getSpeed());
+        System.out.println(timeService.getDuration());
 
     }
 }

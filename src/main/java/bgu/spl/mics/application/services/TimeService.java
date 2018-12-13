@@ -47,8 +47,16 @@ public class TimeService extends MicroService {
         terminate();
     }
 
+    public long getSpeed() {
+        return speed;
+    }
 
-        /*while (tickNumber < duration) {
+    public int getDuration() {
+        return duration;
+    }
+
+
+    /*while (tickNumber < duration) {
             timer.schedule(new MyTimeTask(this), speed);
         }
         timer.purge();

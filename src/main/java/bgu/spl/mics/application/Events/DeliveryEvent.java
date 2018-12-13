@@ -18,5 +18,9 @@ public class DeliveryEvent implements Event {
     public String getAddress() {
         return address;
     }
+
+    public String getClassName() {
+        return "DeliveryEvent";
+    }
 }
 

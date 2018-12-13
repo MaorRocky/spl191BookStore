@@ -35,5 +35,6 @@ public class LogisticsService extends MicroService {
 				terminate();
 			}
 		});
+		RunningCounter.getInstance().addRunningThread();
 	}
 }

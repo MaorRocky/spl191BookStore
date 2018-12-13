@@ -13,4 +13,8 @@ public class ReturnVehicleEvent implements Event {
     public DeliveryVehicle getVehicle() {
         return vehicle;
     }
+
+    public String getClassName() {
+        return "ReturnVehicleEvent";
+    }
 }

@@ -19,4 +19,8 @@ public class TickBroadcast implements Broadcast {
         return terminate;
     }
 
+    public String getClassName() {
+        return "TickBroadcast";
+    }
+
 }

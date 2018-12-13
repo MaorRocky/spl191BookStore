@@ -74,4 +74,16 @@ public class ResourcesHolder {
         }
     }
 
+    private BlockingQueue<DeliveryVehicle> getVehicles() {
+        return vehicles;
+    }
+
+
+    public void testforResources(){
+        System.out.println("---------test vehicles inventory-----------");
+        for (DeliveryVehicle delivery:this.getVehicles()
+             ) {
+            System.out.println("lisence: " + delivery.getLicense() + " speed: " + delivery.getSpeed());;
+        }
+    }
 }

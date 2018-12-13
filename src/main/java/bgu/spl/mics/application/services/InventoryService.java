@@ -36,6 +36,7 @@ public class InventoryService extends MicroService {
             inventory.take(takeBookEvent.getBookTitle());
             complete(takeBookEvent, inventory.take(takeBookEvent.getBookTitle()));
         });
+        RunningCounter.getInstance().addRunningThread();
     }
 
 

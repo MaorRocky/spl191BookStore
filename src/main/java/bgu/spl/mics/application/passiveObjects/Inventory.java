@@ -96,4 +96,19 @@ public class Inventory {
     public void printInventoryToFile(String filename) {
         //TODO: Implement this
     }
+
+    private ConcurrentHashMap<String, BookInventoryInfo> getInventoryMap() {
+        return inventoryMap;
+    }
+
+    public void testPrintInventory() {
+        System.out.println("------- test for inventory----------");
+        for (String string : this.getInventoryMap().keySet()) {
+            String key = string.toString();
+            int amount = this.getInventoryMap().get(key).getAmount();
+            int price = this.getInventoryMap().get(key).getPrice();
+
+            System.out.println(key + " " + amount + " " + price);
+        }
+    }
 }

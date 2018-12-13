@@ -26,4 +26,8 @@ public class BookOrderEvent implements Event<OrderReceipt> {
     public int getExecuteTick() {
         return executeTick;
     }
+
+    public String getClassName() {
+        return "BookOrderEvent";
+    }
 }

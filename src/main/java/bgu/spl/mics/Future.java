@@ -30,7 +30,7 @@ public class Future<T> {
      *
      * @return return the result of type T if it is available, if not wait until it is available.
      */
-    public T get() {
+    public synchronized T get() {
         while (!isDone()) {
             try {
                 wait();

@@ -13,6 +13,10 @@ public class TakeBookEvent implements Event<OrderResult> {
     public String getBookTitle() {
         return bookTitle;
     }
+
+    public String getClassName() {
+        return "TakeBookEvent";
+    }
 }
 
 

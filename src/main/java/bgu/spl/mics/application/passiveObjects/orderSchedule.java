@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
-public class orderSchedule {
+
+import java.util.Comparator;
+
+public class orderSchedule  {
     private String bookTitle;
     private int tick;
 
@@ -17,3 +20,6 @@ public class orderSchedule {
         return tick;
     }
 }
+
+
+

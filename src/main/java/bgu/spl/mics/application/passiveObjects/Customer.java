@@ -29,6 +29,7 @@ public class Customer {
         this.creditCard = creditCard;
         receiptList = new LinkedList<>();
         this.orderSchedule.addAll(Arrays.asList(orderSchedule));
+
     }
 
     /**

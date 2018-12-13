@@ -2,12 +2,8 @@ package bgu.spl.mics.application.passiveObjects;
 
 import bgu.spl.mics.Future;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Passive object representing the resource manager.
@@ -77,7 +73,6 @@ public class ResourcesHolder {
     private BlockingQueue<DeliveryVehicle> getVehicles() {
         return vehicles;
     }
-
 
     public void testforResources(){
         System.out.println("---------test vehicles inventory-----------");

@@ -82,12 +82,8 @@ public class BookStoreRunner {
             for (Object book:customer.getOrderSchedule()
                  ) {
                 System.out.println(book.toString());
-
             }
-
         }
-
-
 
     }
 }

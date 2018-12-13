@@ -1,6 +1,7 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.passiveObjects.*;
+import bgu.spl.mics.application.services.InventoryService;
 import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.*;
 
@@ -27,6 +28,9 @@ public class BookStoreRunner {
         JsonArray initialInventoryArray = rootObject.getAsJsonArray("initialInventory");
         BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray, BookInventoryInfo[].class);
         Inventory.getInstance().load(bookInventoryInfo);
+        /*loaded bookInventoryInfo*/
+        Inventory.getInstance().testPrintInventory();
+
 
         //-------------------------- initialResources --------------------------
 
@@ -34,8 +38,8 @@ public class BookStoreRunner {
         JsonObject jsonObject = initialResources.get(0).getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
         DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
-        ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
-        resourcesHolder.load(deliveryVehicles);
+        ResourcesHolder.getInstance().load(deliveryVehicles);
+        /*loaded deliveryVehicles*/
 
         //-------------------------- Services Object --------------------------
 
@@ -72,8 +76,8 @@ public class BookStoreRunner {
 
         /*test for customers*/
         System.out.println("********test for customers********");
-        for (Customer customer:customersArr
-             ) {
+        for (Customer customer : customersArr
+        ) {
             System.out.println(customer.getId());
             System.out.println(customer.getName());
             System.out.println(customer.getAddress());

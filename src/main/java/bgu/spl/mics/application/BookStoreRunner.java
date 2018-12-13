@@ -70,6 +70,8 @@ public class BookStoreRunner {
         JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
         Customer[] customersArr = gson.fromJson(customers, Customer[].class);
 
+
+        //-----------------------TESTS---------------------------
         /*test for customers*/
         System.out.println("********test for customers********");
         for (Customer customer:customersArr

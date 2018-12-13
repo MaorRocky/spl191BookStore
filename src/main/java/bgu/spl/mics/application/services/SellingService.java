@@ -43,13 +43,16 @@ public class SellingService extends MicroService {
                 nextReceiptNumber++;
                 sendEvent(new TakeBookEvent(event.getBookName()));
                 complete(event, toAdd);
+                System.out.println(customer.getName());
             } else {
                 complete(event, null);
+                System.out.println(customer.getName());
             }
         });
 
         subscribeBroadcast(TickBroadcast.class, tick -> {
             if (tick.isTermination()) {
+                System.out.println(this.getName() + " terminating");
                 terminate();
             }
         });

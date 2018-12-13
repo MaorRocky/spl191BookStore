@@ -47,16 +47,11 @@ public class MessageBusImpl<K, V> implements MessageBus {
             synchronized (eventTypeToMicroService) {
                 if (!eventTypeToMicroService.containsKey(type)) {
                     eventTypeToMicroService.put(type, new LinkedList<>());
-                    System.out.println(type.getSimpleName() + " was add");
                 }
             }
             eventTypeToMicroService.get(type).addLast(m);
             if (!microServiceToMessageTypes.containsKey(m)) {
                 microServiceToMessageTypes.put(m, new LinkedList<>());
-                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
-            }
-            else {
-                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
             }
             microServiceToMessageTypes.get(m).addLast(type);
 
@@ -70,16 +65,11 @@ public class MessageBusImpl<K, V> implements MessageBus {
             synchronized (broadcastTypeToMicroService) {
                 if (!broadcastTypeToMicroService.containsKey(type)) {
                     broadcastTypeToMicroService.put(type, new LinkedList<>());
-                    System.out.println(type.getSimpleName() + " was add");
                 }
             }
             broadcastTypeToMicroService.get(type).addLast(m);
             if (!microServiceToMessageTypes.containsKey(m)) {
                 microServiceToMessageTypes.put(m, new LinkedList<>());
-                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
-            }
-            else {
-                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
             }
             microServiceToMessageTypes.get(m).addLast(type);
         }
@@ -131,7 +121,6 @@ public class MessageBusImpl<K, V> implements MessageBus {
     public void register(MicroService m) {
         if (!microServiceToMessagesList.containsKey(m)) {
             microServiceToMessagesList.put(m, new LinkedBlockingQueue<>());
-            System.out.println(m.getName());
         }
     }
 
@@ -147,16 +136,22 @@ public class MessageBusImpl<K, V> implements MessageBus {
             }
 
             for (Class<? extends Message> type : microServiceToMessageTypes.get(m)) {
-                if (eventTypeToMicroService.containsKey(type)) {
+                if (eventTypeToMicroService.get(type) != null) {
                     synchronized (eventTypeToMicroService.get(type)) {
-                        eventTypeToMicroService.get(type).remove(m);
+                        if (eventTypeToMicroService.containsKey(type)) {
+                            eventTypeToMicroService.get(type).remove(m);
+                        }
                     }
                 }
-                if (broadcastTypeToMicroService.containsKey(type)) {
+
+                if (broadcastTypeToMicroService.get(type) != null) {
                     synchronized (broadcastTypeToMicroService.get(type)) {
-                        broadcastTypeToMicroService.get(type).remove(m);
+                        if (broadcastTypeToMicroService.containsKey(type)) {
+                            broadcastTypeToMicroService.get(type).remove(m);
+                        }
                     }
                 }
+
             }
             microServiceToMessagesList.remove(m);
             microServiceToMessageTypes.remove(m);

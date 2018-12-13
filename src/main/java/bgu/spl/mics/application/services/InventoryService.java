@@ -2,6 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.application.Events.CheckAvailabilityEvent;
 import bgu.spl.mics.application.Events.TakeBookEvent;
+import bgu.spl.mics.application.Events.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.MicroService;
 
@@ -36,6 +37,14 @@ public class InventoryService extends MicroService {
             inventory.take(takeBookEvent.getBookTitle());
             complete(takeBookEvent, inventory.take(takeBookEvent.getBookTitle()));
         });
+
+        subscribeBroadcast(TickBroadcast.class, tick -> {
+            if (tick.isTermination()) {
+                System.out.println(this.getName() + " terminating");
+                terminate();
+           }
+        });
+
         RunningCounter.getInstance().addRunningThread();
     }
 

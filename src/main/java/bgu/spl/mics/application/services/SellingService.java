@@ -53,7 +53,7 @@ public class SellingService extends MicroService {
                 terminate();
             }
         });
-
+        RunningCounter.getInstance().addRunningThread();
     }
 
 }

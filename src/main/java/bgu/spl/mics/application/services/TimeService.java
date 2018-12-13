@@ -1,8 +1,10 @@
 package bgu.spl.mics.application.services;
+
 import bgu.spl.mics.application.passiveObjects.*;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.Events.TickBroadcast;
+
 import java.util.Timer;
 
 import static java.lang.Thread.sleep;
@@ -18,41 +20,40 @@ import static java.lang.Thread.sleep;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class TimeService extends MicroService {
-    private long speed;
-    private int duration;
+    private time time;
     private Timer timer;
     protected int tickNumber;
 
 
-    public TimeService(int speed, int duration) {
+    public TimeService(time time) {
         super("Time");
-        this.speed = speed;
-        this.duration = duration;
+        this.time = time;
         timer = new Timer();
         tickNumber = 1;
     }
 
     @Override
     protected void initialize() {
-        while (tickNumber < duration) {
+        while (tickNumber < time.getDuration()) {
             TickBroadcast tick = new TickBroadcast(tickNumber, false);
             sendBroadcast(tick);
             try {
-                sleep(speed);
-            } catch (InterruptedException e) {}
+                sleep(time.getSpeed());
+            } catch (InterruptedException e) {
+            }
             tickNumber++;
         }
-        TickBroadcast lastTick = new TickBroadcast(duration, true);
+        TickBroadcast lastTick = new TickBroadcast(time.getDuration(), true);
         sendBroadcast(lastTick);
         terminate();
     }
 
     public long getSpeed() {
-        return speed;
+        return time.getSpeed();
     }
 
     public int getDuration() {
-        return duration;
+        return time.getDuration();
     }
 
 

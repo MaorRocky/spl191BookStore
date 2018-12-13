@@ -50,7 +50,7 @@ public class APIService extends MicroService {
                 terminate();
             }
         });
-
+        RunningCounter.getInstance().addRunningThread();
     }
 
 }

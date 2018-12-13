@@ -13,4 +13,8 @@ public class SendDeliveryEvent implements Event<DeliveryVehicle> {
     public String getAddrees() {
         return addrees;
     }
+
+    public String getClassName() {
+        return "SendDeliveryEvent";
+    }
 }

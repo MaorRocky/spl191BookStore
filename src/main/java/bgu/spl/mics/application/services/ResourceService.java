@@ -33,15 +33,18 @@ public class ResourceService extends MicroService{
 			complete(delivery, vehicle);
 		});
 
+		subscribeEvent(ReturnVehicleEvent.class, returnVehicle -> {
+			resources.releaseVehicle(returnVehicle.getVehicle());
+		});
+		RunningCounter.getInstance().addRunningThread();
+
 		subscribeBroadcast(TickBroadcast.class, tick -> {
 			if (tick.isTermination()) {
 				terminate();
 			}
 		});
 
-		subscribeEvent(ReturnVehicleEvent.class, returnVehicle -> {
-			resources.releaseVehicle(returnVehicle.getVehicle());
-		});
+
 	}
 
 }

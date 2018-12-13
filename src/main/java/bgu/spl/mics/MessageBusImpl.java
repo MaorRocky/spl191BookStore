@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.passiveObjects.RunningCounter;
+
 import java.util.LinkedList;
 import java.util.concurrent.*;
 
@@ -42,14 +44,22 @@ public class MessageBusImpl<K, V> implements MessageBus {
     @Override
     public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
         if (microServiceToMessagesList.containsKey(m)) {
-            if (!eventTypeToMicroService.containsKey(type)) {
-                eventTypeToMicroService.put(type, new LinkedList<>());
+            synchronized (eventTypeToMicroService) {
+                if (!eventTypeToMicroService.containsKey(type)) {
+                    eventTypeToMicroService.put(type, new LinkedList<>());
+                    System.out.println(type.getSimpleName() + " was add");
+                }
             }
             eventTypeToMicroService.get(type).addLast(m);
             if (!microServiceToMessageTypes.containsKey(m)) {
                 microServiceToMessageTypes.put(m, new LinkedList<>());
+                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
+            }
+            else {
+                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
             }
             microServiceToMessageTypes.get(m).addLast(type);
+
         }
     }
 
@@ -57,12 +67,19 @@ public class MessageBusImpl<K, V> implements MessageBus {
     @Override
     public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
         if (microServiceToMessagesList.containsKey(m)) { // if "m" exist
-            if (!broadcastTypeToMicroService.containsKey(type)) {
-                broadcastTypeToMicroService.put(type, new LinkedList<>());
+            synchronized (broadcastTypeToMicroService) {
+                if (!broadcastTypeToMicroService.containsKey(type)) {
+                    broadcastTypeToMicroService.put(type, new LinkedList<>());
+                    System.out.println(type.getSimpleName() + " was add");
+                }
             }
             broadcastTypeToMicroService.get(type).addLast(m);
             if (!microServiceToMessageTypes.containsKey(m)) {
                 microServiceToMessageTypes.put(m, new LinkedList<>());
+                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
+            }
+            else {
+                System.out.println(m.getName() + " subscribed to " + type.getSimpleName());
             }
             microServiceToMessageTypes.get(m).addLast(type);
         }
@@ -77,6 +94,9 @@ public class MessageBusImpl<K, V> implements MessageBus {
 
     @Override
     public void sendBroadcast(Broadcast b) {
+        if (!broadcastTypeToMicroService.containsKey(b.getClass())) {
+            broadcastTypeToMicroService.put(b.getClass(), new LinkedList<>());
+        }
         synchronized (broadcastTypeToMicroService.get(b.getClass())) {
             if (broadcastTypeToMicroService.containsKey(b.getClass())) {
                 for (MicroService service : broadcastTypeToMicroService.get(b.getClass())) {
@@ -95,9 +115,11 @@ public class MessageBusImpl<K, V> implements MessageBus {
                 return null;
             } else {
                 synchronized (eventToResolveMap) {
-                    MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
-                    microServiceToMessagesList.get(next).add(e);
-                    eventTypeToMicroService.get(e.getClass()).addLast(next);
+                    synchronized (eventTypeToMicroService) {
+                        MicroService next = eventTypeToMicroService.get(e.getClass()).removeFirst();
+                        microServiceToMessagesList.get(next).add(e);
+                        eventTypeToMicroService.get(e.getClass()).addLast(next);
+                    }
                     eventToResolveMap.put(e, future);
                     return future;
                 }
@@ -109,8 +131,8 @@ public class MessageBusImpl<K, V> implements MessageBus {
     public void register(MicroService m) {
         if (!microServiceToMessagesList.containsKey(m)) {
             microServiceToMessagesList.put(m, new LinkedBlockingQueue<>());
+            System.out.println(m.getName());
         }
-
     }
 
     @Override
@@ -139,6 +161,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
             microServiceToMessagesList.remove(m);
             microServiceToMessageTypes.remove(m);
         }
+        RunningCounter.getInstance().reduceRunningThread();
     }
 
     @Override

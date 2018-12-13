@@ -14,6 +14,10 @@ public class CheckAvailabilityEvent implements Event<Integer> {
     public String getBookTitle() {
         return bookTitle;
     }
+
+    public String getClassName() {
+        return "CheckAvailabilityEvent";
+    }
 }
 
 

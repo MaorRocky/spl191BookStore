@@ -29,7 +29,6 @@ public class BookStoreRunner {
         BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray, BookInventoryInfo[].class);
         Inventory.getInstance().load(bookInventoryInfo);
         /*loaded bookInventoryInfo*/
-        Inventory.getInstance().testPrintInventory();
 
 
         //-------------------------- initialResources --------------------------
@@ -39,60 +38,36 @@ public class BookStoreRunner {
         JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
         DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
         ResourcesHolder.getInstance().load(deliveryVehicles);
-        System.out.println("*********test *********");
-        ResourcesHolder.getInstance().testforResources();
-        System.out.println();
         /*loaded deliveryVehicles*/
 
         //-------------------------- Services Object --------------------------
-
         JsonObject jsonServicesObj = rootObject.getAsJsonObject("services");
 
         //-------------------------- inventory service --------------------------
-
         JsonPrimitive jsonPrimitive = jsonServicesObj.getAsJsonPrimitive("inventoryService");
 
         //--------------------- selling ---------------------
-
         JsonPrimitive sellingNum = jsonServicesObj.getAsJsonPrimitive("selling");
         int sellingNumber = sellingNum.getAsInt();
 
-        //--------------------- time ---------------------
 
+        //--------------------- time ---------------------
         JsonObject jsonTimeObject = jsonServicesObj.getAsJsonObject("time");
         TimeService timeService = gson.fromJson(jsonTimeObject, TimeService.class);
 
         //--------------------- logistics ---------------------
-
         JsonPrimitive logistics = jsonServicesObj.getAsJsonPrimitive("logistics");
         int logisticsNumber = logistics.getAsInt();
 
-        //--------------------- resource service ---------------------
 
+        //--------------------- resource service ---------------------
         JsonPrimitive resourcesService = jsonServicesObj.getAsJsonPrimitive("resourcesService");
         int resourceServiceNum = resourcesService.getAsInt();
 
         //--------------------- customers ---------------------
-
         JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
         Customer[] customersArr = gson.fromJson(customers, Customer[].class);
 
-        /*test for customers*/
-        System.out.println("********test for customers********");
-        for (Customer customer : customersArr
-        ) {
-            System.out.println(customer.getId());
-            System.out.println(customer.getName());
-            System.out.println(customer.getAddress());
-            System.out.println(customer.getDistance());
-            System.out.println(customer.getCreditCard().getCreditCardIdNumber());
-            System.out.println(customer.getCreditCard().getCreditBalance());
-            System.out.println("************");
-        }
-        /*test for timeService*/
-        System.out.println("tetst for timeservice");
-        System.out.println(timeService.getSpeed());
-        System.out.println(timeService.getDuration());
 
     }
 }

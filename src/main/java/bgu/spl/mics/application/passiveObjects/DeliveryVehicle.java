@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Passive data-object representing a delivery vehicle of the store.
  * You must not alter any of the given public methods of this class.
@@ -7,18 +9,20 @@ package bgu.spl.mics.application.passiveObjects;
  * You may add ONLY private fields and methods to this class.
  */
 public class DeliveryVehicle {
+	private int license;
+	private int speed;
 	/**
      * Constructor.   
      */
 	 public DeliveryVehicle(int license, int speed) {
-		// TODO Implement this
+		 this.license = license;
+		 this.speed = speed;
 	  }
 	/**
      * Retrieves the license of this delivery vehicle.   
      */
 	public int getLicense() {
-		// TODO Implement this
-		return 0;
+		return license;
 	}
 	
 	/**
@@ -27,8 +31,7 @@ public class DeliveryVehicle {
      * @return Number of ticks needed for 1 Km.
      */
 	public int getSpeed() {
-		// TODO Implement this
-		return 0;
+		return speed;
 	}
 	
 	/**
@@ -39,6 +42,11 @@ public class DeliveryVehicle {
      * @param distance	The distance from the store to the customer.
      */
 	public void deliver(String address, int distance) {
-		// TODO Implement this
+		try {
+			sleep(distance/speed);
+		}
+		catch (InterruptedException e){}
 	}
+
+
 }

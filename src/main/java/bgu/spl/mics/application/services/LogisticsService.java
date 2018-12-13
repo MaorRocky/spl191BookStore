@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.services;
-
+import bgu.spl.mics.Future;
+import bgu.spl.mics.application.passiveObjects.*;
+import bgu.spl.mics.application.Events.*;
 import bgu.spl.mics.MicroService;
 
 /**
@@ -13,15 +15,25 @@ import bgu.spl.mics.MicroService;
  */
 public class LogisticsService extends MicroService {
 
-	public LogisticsService() {
-		super("Change_This_Name");
-		// TODO Implement this
+	public LogisticsService(String name) {
+		super(name);
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
-		
-	}
+		this.subscribeEvent(DeliveryEvent.class, delivery -> {
+			Future<DeliveryVehicle> future = sendEvent(new SendDeliveryEvent(delivery.getAddress()));
+			DeliveryVehicle vehicle = future.get();
+			if (vehicle != null) {
+				vehicle.deliver(delivery.getCustomer().getAddress(), delivery.getCustomer().getDistance());
+				sendEvent(new ReturnVehicleEvent(vehicle));
+			}
+		});
 
+		subscribeBroadcast(TickBroadcast.class, tick -> {
+			if (tick.isTermination()) {
+				terminate();
+			}
+		});
+	}
 }

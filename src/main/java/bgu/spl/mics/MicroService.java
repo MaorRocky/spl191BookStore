@@ -1,13 +1,13 @@
 package bgu.spl.mics;
+import java.util.concurrent.ConcurrentHashMap;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
  * must extend. The abstract MicroService class is responsible to get and
  * manipulate the singleton {@link MessageBus} instance.
  * <p>
- * Derived classes of MicroService should never directly touch the message-bus.
+ * Derived classes of MicroService should never directly touch the messageK-bus.
  * Instead, they have a set of internal protected wrapping methods (e.g.,
  * {@link #sendBroadcast(bgu.spl.mics.Broadcast)}, {@link #sendBroadcast(bgu.spl.mics.Broadcast)},
  * etc.) they can use. When subscribing to message-types,
@@ -25,6 +25,7 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private MessageBusImpl bus;
+    private ConcurrentHashMap<Class<? extends Message>, Callback> callList;
 
 
 
@@ -34,8 +35,8 @@ public abstract class MicroService implements Runnable {
      */
     public MicroService(String name) {
         this.name = name;
-        bus = MessageBusImpl.getInstance();
-        bus.register(this);
+        this.bus = MessageBusImpl.getInstance();
+        this.callList = new ConcurrentHashMap<>();
     }
 
     /**
@@ -61,6 +62,9 @@ public abstract class MicroService implements Runnable {
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
         bus.subscribeEvent(type,this);
+        if (!callList.containsKey(type)) {
+            callList.put(type, callback);
+        }
     }
 
     /**
@@ -84,7 +88,10 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
+        bus.subscribeBroadcast(type, this);
+        if (!callList.contains(type)) {
+            callList.put(type, callback);
+        }
     }
 
     /**
@@ -110,7 +117,7 @@ public abstract class MicroService implements Runnable {
      * @param b The broadcast message to send
      */
     protected final void sendBroadcast(Broadcast b) {
-        //TODO: implement this.
+        bus.sendBroadcast(b);
     }
 
     /**
@@ -149,19 +156,23 @@ public abstract class MicroService implements Runnable {
     }
 
     /**
-     * The entry point of the micro-service. TODO: you must complete this code
+     * The entry point of the micro-service.
      * otherwise you will end up in an infinite loop.
      */
     @Override
     public final void run() {
+        bus.register(this);
         initialize();
         while (!terminated) {
+            Message message = null;
             try {
-                bus.awaitMessage(this);
+                message = bus.awaitMessage(this);
             }
-            catch (InterruptedException e) {
+            catch (InterruptedException e) {}
+            if (message != null) {
+                callList.get(message.getClass()).call(message);
             }
         }
+        bus.unregister(this);
     }
-
 }

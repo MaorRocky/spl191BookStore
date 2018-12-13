@@ -39,6 +39,9 @@ public class BookStoreRunner {
         JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
         DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
         ResourcesHolder.getInstance().load(deliveryVehicles);
+        System.out.println("*********test *********");
+        ResourcesHolder.getInstance().testforResources();
+        System.out.println();
         /*loaded deliveryVehicles*/
 
         //-------------------------- Services Object --------------------------

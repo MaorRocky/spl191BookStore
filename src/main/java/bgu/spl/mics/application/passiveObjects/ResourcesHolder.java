@@ -45,8 +45,8 @@ public class ResourcesHolder {
         DeliveryVehicle vehicle = null;
         try {
             vehicle = vehicles.take();
+        } catch (InterruptedException e) {
         }
-        catch (InterruptedException e){}
         future.resolve(vehicle);
         return new Future<DeliveryVehicle>();
     }
@@ -74,4 +74,18 @@ public class ResourcesHolder {
         }
     }
 
+    private BlockingQueue<DeliveryVehicle> getVehicles() {
+        return vehicles;
+    }
+
+
+    public void testforResources(){
+        System.out.println("test vehicles inventory");
+        for (DeliveryVehicle delivery:this.getVehicles()
+             ) {
+            System.out.println(delivery.getLicense()+" speed :  " + delivery.getSpeed());
+
+
+        }
+    }
 }

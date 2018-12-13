@@ -37,7 +37,7 @@ public class APIService extends MicroService {
         this.subscribeBroadcast(TickBroadcast.class, broadcast -> {
             if (!broadcast.isTermination()) {
                 for (BookOrderEvent order : orders) {
-                    if (order.getExecuteTick() <= broadcast.getTick()) {
+                    if (order.getExecuteTick() == broadcast.getTick()) {
                         Future<OrderReceipt> future = sendEvent(order);
                         OrderReceipt receipt = future.get();
                         if (receipt != null) {
@@ -47,6 +47,7 @@ public class APIService extends MicroService {
                     }
                 }
             } else {
+                System.out.println(this.getName() + " terminating");
                 terminate();
             }
         });

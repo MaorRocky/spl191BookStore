@@ -94,6 +94,9 @@ public class Customer {
     }
 
     public void addReceipt(OrderReceipt r) {
+        if (receiptList == null) {
+            receiptList = new LinkedList<>();
+        }
         receiptList.add(r);
     }
 

@@ -37,6 +37,7 @@ public class TimeService extends MicroService {
         while (tickNumber < time.getDuration()) {
             TickBroadcast tick = new TickBroadcast(tickNumber, false);
             sendBroadcast(tick);
+            System.out.println(tick.getTick());
             try {
                 sleep(time.getSpeed());
             } catch (InterruptedException e) {
@@ -46,6 +47,7 @@ public class TimeService extends MicroService {
         TickBroadcast lastTick = new TickBroadcast(time.getDuration(), true);
         sendBroadcast(lastTick);
         terminate();
+        RunningCounter.getInstance().reduceRunningThread();
     }
 
     public long getSpeed() {

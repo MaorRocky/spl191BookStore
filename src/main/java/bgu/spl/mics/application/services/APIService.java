@@ -21,12 +21,15 @@ import static java.lang.Thread.sleep;
  */
 public class APIService extends MicroService {
     private Customer customer;
+    private List<BookOrderEvent> orders;
 
-
-    public APIService(String name, Customer customer) {
+    public APIService(String name, Customer customer, List<BookOrderEvent> orders) {
         super(name);
         this.customer = customer;
-
+        this.orders = new LinkedList<BookOrderEvent>();
+        for (BookOrderEvent order : orders) {
+            this.orders.add(order);
+        }
     }
 
     @Override

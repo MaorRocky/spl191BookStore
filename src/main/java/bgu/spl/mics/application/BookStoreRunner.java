@@ -70,7 +70,7 @@ public class BookStoreRunner {
         JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
         Customer[] customersArr = gson.fromJson(customers, Customer[].class);
 
-        /*test*/
+        /*test for customers*/
         for (Customer customer:customersArr
              ) {
             System.out.println(customer.getId());
@@ -79,10 +79,7 @@ public class BookStoreRunner {
             System.out.println(customer.getDistance());
             System.out.println(customer.getCreditCard().getCreditCardIdNumber());
             System.out.println(customer.getCreditCard().getCreditBalance());
-            for (Object book:customer.getOrderSchedule()
-                 ) {
-                System.out.println(book.toString());
-            }
+            System.out.println("************");
         }
 
     }

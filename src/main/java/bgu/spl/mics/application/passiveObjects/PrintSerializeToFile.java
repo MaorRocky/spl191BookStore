@@ -3,7 +3,9 @@ package bgu.spl.mics.application.passiveObjects;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class PrintSerializeToFile {
     private String filename;
@@ -13,7 +15,7 @@ public class PrintSerializeToFile {
         this.filename = filename;
     }
 
-    public void printSerialized(HashMap<?, ?> hashMap) {
+    public void printSerializedHashMap(HashMap<?, ?> hashMap) {
         try {
             FileOutputStream fileOut = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -25,5 +27,16 @@ public class PrintSerializeToFile {
         }
 
 
+    }
+    public void printSerializedList(List<?> list){
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(list);
+            out.close();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -100,7 +100,7 @@ public class Inventory implements Serializable {
             printInventoryHashMap.put(this.inventoryMap.get(book).getBookTitle(), this.inventoryMap.get(book).getAmount());
         }
         PrintSerializeToFile printer = new PrintSerializeToFile(filename);
-        printer.printSerialized(printInventoryHashMap);
+        printer.printSerializedHashMap(printInventoryHashMap);
     }
 
     private ConcurrentHashMap<String, BookInventoryInfo> getInventoryMap() {

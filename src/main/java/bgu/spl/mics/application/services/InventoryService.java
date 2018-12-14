@@ -35,7 +35,7 @@ public class InventoryService extends MicroService {
         /*TODO:should we return ENUM to the eventToResolveMap?*/
         this.subscribeEvent(TakeBookEvent.class, takeBookEvent -> {
             inventory.take(takeBookEvent.getBookTitle());
-            complete(takeBookEvent, inventory.take(takeBookEvent.getBookTitle()));
+            complete(takeBookEvent, null);
         });
 
         subscribeBroadcast(TickBroadcast.class, tick -> {

@@ -83,4 +83,8 @@ public class OrderReceipt {
 	public int getProcessTick() {
 		return processTick;
 	}
+
+	public void testPrintReciept() {
+		System.out.println(orderId + " " + seller + " " + customerId + " " + bookTitle + " " + price);
+	}
 }

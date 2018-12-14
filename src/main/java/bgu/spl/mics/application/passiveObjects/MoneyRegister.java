@@ -62,4 +62,11 @@ public class MoneyRegister {
 	public void printOrderReceipts(String filename) {
 		//TODO: Implement this
 	}
+
+	public void testPrintReceipts() {
+		System.out.println("------test for money register--------");
+		for (OrderReceipt receipt: receipts) {
+			receipt.testPrintReciept();
+		}
+	}
 }

@@ -17,12 +17,10 @@ import bgu.spl.mics.MicroService;
  */
 public class SellingService extends MicroService {
     private MoneyRegister moneyRegister;
-    int nextReceiptNumber;
 
     public SellingService(String name) {
         super(name);
         this.moneyRegister = MoneyRegister.getInstance();
-        nextReceiptNumber = 0;
     }
 
     /*if the BookOrderEvent was committed as it should than we will add to the
@@ -31,16 +29,22 @@ public class SellingService extends MicroService {
 
     @Override
     protected void initialize() {
+        subscribeBroadcast(TickBroadcast.class, tick -> {
+            if (tick.isTermination()) {
+                System.out.println(this.getName() + " terminating");
+                terminate();
+            }
+        });
+
         this.subscribeEvent(BookOrderEvent.class, event -> {
             Future<Integer> future = sendEvent(new CheckAvailabilityEvent(event.getBookName()));
             Customer customer = event.getCustomer();
             Integer price = future.get();
             if (price > -1 && customer.getAvailableCreditAmount() >= price) {
                 moneyRegister.chargeCreditCard(customer, price);
-                OrderReceipt toAdd = new OrderReceipt(nextReceiptNumber,
+                OrderReceipt toAdd = new OrderReceipt(ReceiptsCounter.getInstance().getNextReceiptsNumber(),
                         this.getName(), customer.getId(), event.getBookName(), price);
                 moneyRegister.file(toAdd);
-                nextReceiptNumber++;
                 sendEvent(new TakeBookEvent(event.getBookName()));
                 complete(event, toAdd);
                 System.out.println(customer.getName());
@@ -50,12 +54,7 @@ public class SellingService extends MicroService {
             }
         });
 
-        subscribeBroadcast(TickBroadcast.class, tick -> {
-            if (tick.isTermination()) {
-                System.out.println(this.getName() + " terminating");
-                terminate();
-            }
-        });
+
         RunningCounter.getInstance().addRunningThread();
     }
 

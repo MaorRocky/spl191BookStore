@@ -48,7 +48,7 @@ public class ResourcesHolder {
         } catch (InterruptedException e) {
         }
         future.resolve(vehicle);
-        return new Future<DeliveryVehicle>();
+        return future;
     }
 
     /**

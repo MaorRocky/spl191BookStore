@@ -68,7 +68,6 @@ public class Inventory {
             inventoryMap.get(book).reduce();
             return SUCCESSFULLY_TAKEN;
         }
-
     }
 
     /**

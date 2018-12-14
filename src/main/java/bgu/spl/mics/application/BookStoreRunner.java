@@ -136,12 +136,14 @@ public class BookStoreRunner {
         timer.start();
         while(RunningCounter.getInstance().getNumberRunningThreads() > 0);
         printBookStore();
+        System.exit(0);
 
     }
 
     public static void printBookStore() {
         Inventory.getInstance().testPrintInventory();
         ResourcesHolder.getInstance().testforResources();
+        MoneyRegister.getInstance().testPrintReceipts();
     }
 }
 

@@ -2,8 +2,9 @@ package bgu.spl.mics.application.passiveObjects;
 
 import bgu.spl.mics.Future;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.*;
 
 /**
  * Passive object representing the resource manager.
@@ -18,8 +19,8 @@ public class ResourcesHolder {
     private static class SingletonHolder {
         private static ResourcesHolder instance = new ResourcesHolder();
     }
-
-    private BlockingQueue<DeliveryVehicle> vehicles = new LinkedBlockingQueue<>();
+    private ConcurrentLinkedQueue<Future<DeliveryVehicle>> vehicleWaitingQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<DeliveryVehicle> vehicles = new ConcurrentLinkedQueue<>();
 
     /**
      * Retrieves the single instance of this class.
@@ -38,13 +39,20 @@ public class ResourcesHolder {
      */
     public Future<DeliveryVehicle> acquireVehicle() {
         Future<DeliveryVehicle> future = new Future<>();
-        DeliveryVehicle vehicle = null;
+        DeliveryVehicle vehicle = vehicles.remove();
+        if (vehicle != null) {
+            future.resolve(vehicle);
+        }
+        else {
+            vehicleWaitingQueue.add(future);
+        }
+        /*DeliveryVehicle vehicle = null;
         try {
             vehicle = vehicles.take();
         } catch (InterruptedException e) {
         }
-        future.resolve(vehicle);
-        return new Future<DeliveryVehicle>();
+        future.resolve(vehicle);*/
+        return future;
     }
 
     /**
@@ -55,7 +63,14 @@ public class ResourcesHolder {
      * @param vehicle {@link DeliveryVehicle} to be released.
      */
     public void releaseVehicle(DeliveryVehicle vehicle) {
-        vehicles.add(vehicle);
+        //vehicles.add(vehicle);
+        if (vehicleWaitingQueue.isEmpty()) {
+            vehicles.add(vehicle);
+        }
+        else {
+            vehicleWaitingQueue.poll().resolve(vehicle);
+        }
+
     }
 
     /**
@@ -70,14 +85,10 @@ public class ResourcesHolder {
         }
     }
 
-    private BlockingQueue<DeliveryVehicle> getVehicles() {
-        return vehicles;
-    }
 
     public void testforResources(){
         System.out.println("---------test vehicles inventory-----------");
-        for (DeliveryVehicle delivery:this.getVehicles()
-             ) {
+        for (DeliveryVehicle delivery: vehicles) {
             System.out.println("lisence: " + delivery.getLicense() + " speed: " + delivery.getSpeed());;
         }
     }

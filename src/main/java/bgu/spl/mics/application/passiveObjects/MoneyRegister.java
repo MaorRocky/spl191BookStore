@@ -60,6 +60,15 @@ public class MoneyRegister {
      * This method is called by the main method in order to generate the output.
      */
 	public void printOrderReceipts(String filename) {
-		//TODO: Implement this
+	LinkedList<OrderReceipt> PrintOrdersReceipts = (LinkedList<OrderReceipt>) this.receipts.clone();
+	PrintSerializeToFile printer = new PrintSerializeToFile(filename);
+	printer.printSerializedList(PrintOrdersReceipts);
+	}
+
+	public void testPrintReceipts() {
+		System.out.println("------test for money register--------");
+		for (OrderReceipt receipt: receipts) {
+			receipt.testPrintReciept();
+		}
 	}
 }

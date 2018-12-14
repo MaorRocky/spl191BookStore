@@ -15,15 +15,15 @@ public class RunningCounter {
         this.running = 0;
     }
 
-    public int getNumberRunningThreads() {
+    public synchronized int getNumberRunningThreads() {
         return running;
     }
 
-    public void addRunningThread() {
+    public synchronized void addRunningThread() {
         running++;
     }
 
-    public void reduceRunningThread() {
+    public synchronized void reduceRunningThread() {
         running--;
     }
 }

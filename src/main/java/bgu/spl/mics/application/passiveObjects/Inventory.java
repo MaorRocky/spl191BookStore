@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static bgu.spl.mics.application.passiveObjects.OrderResult.NOT_IN_STOCK;
@@ -16,7 +18,7 @@ import static bgu.spl.mics.application.passiveObjects.OrderResult.SUCCESSFULLY_T
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
-public class Inventory {
+public class Inventory implements Serializable {
 
     //---------------------------------FIELDS-------------------------------------------
     private static class singletonHolder {
@@ -68,7 +70,6 @@ public class Inventory {
             inventoryMap.get(book).reduce();
             return SUCCESSFULLY_TAKEN;
         }
-
     }
 
     /**
@@ -94,7 +95,12 @@ public class Inventory {
      * This method is called by the main method in order to generate the output.
      */
     public void printInventoryToFile(String filename) {
-        //TODO: Implement this
+        HashMap<String, Integer> printInventoryHashMap = new HashMap<>();
+        for (String book : this.inventoryMap.keySet()) {
+            printInventoryHashMap.put(this.inventoryMap.get(book).getBookTitle(), this.inventoryMap.get(book).getAmount());
+        }
+        PrintSerializeToFile printer = new PrintSerializeToFile(filename);
+        printer.printSerializedHashMap(printInventoryHashMap);
     }
 
     private ConcurrentHashMap<String, BookInventoryInfo> getInventoryMap() {

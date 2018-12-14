@@ -2,8 +2,6 @@ package bgu.spl.mics.application.passiveObjects;
 
 import bgu.spl.mics.Future;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.*;
 
 /**

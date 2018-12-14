@@ -1,7 +1,7 @@
 {
   "initialInventory": [
-  {"bookTitle": "Harry Poter", "amount": 10, "price": 90},
-  {"bookTitle": "The Hunger Games", "amount": 1, "price": 102},{"bookTitle": "Poo the bear", "amount": 3, "price": 32},{"bookTitle": "Games of thrones", "amount": 2, "price": 50}
+  {"bookTitle": "Harry Poter", "amount": 10, "price": 2},
+  {"bookTitle": "The Hunger Games", "amount": 90, "price": 2}
   ],
   "initialResources":[
    {"vehicles":[
@@ -12,12 +12,12 @@
     ],
   "services":{
     "time": {
-      "speed": 1000,
-      "duration": 24
+      "speed": 10,
+      "duration": 300
     },
     "selling": 6,
     "inventoryService": 3,
-    "logistics": 4,
+    "logistics": 3,
     "resourcesService": 2,
     "customers": [
      {
@@ -25,10 +25,24 @@
         "name": "Bruria",
         "address": "NewYork 123",
         "distance":33,
-        "creditCard":{"number":67890,"amount":1000},
+        "creditCard":{"number":67890,"amount":88},
         "orderSchedule": [
-            {"bookTitle": "Harry Poter", "tick": 3},
-            {"bookTitle": "The Hunger Games", "tick": 13},{"bookTitle": "Poo the bear", "tick": 20},{"bookTitle": "Games of thrones", "tick": 15}
+            {"bookTitle": "Harry Poter", "tick": 150},{"bookTitle": "Harry Poter", "tick": 300},
+          {"bookTitle": "Harry Poter", "tick": 150},
+          {"bookTitle": "Harry Poter", "tick": 150},
+            {"bookTitle": "The Hunger Games", "tick": 23},
+          {"bookTitle": "The Hunger Games", "tick": 300},
+          {"bookTitle": "The Hunger Games", "tick": 300},
+          {"bookTitle": "The Hunger Games", "tick": 300},
+          {"bookTitle": "The Hunger Games", "tick": 296},
+          {"bookTitle": "The Hunger Games", "tick": 297},
+          {"bookTitle": "The Hunger Games", "tick": 298},
+          {"bookTitle": "The Hunger Games", "tick": 298},
+          {"bookTitle": "The Hunger Games", "tick": 298},
+          {"bookTitle": "The Hunger Games", "tick": 298},
+          {"bookTitle": "The Hunger Games", "tick": 299},
+          {"bookTitle": "The Hunger Games", "tick": 300},
+          {"bookTitle": "The Hunger Games", "tick": 300}
           ]
       },
     {
@@ -36,14 +50,14 @@
         "name": "Shraga",
         "address": "BeerSheva 3333",
         "distance":12,
-         "creditCard":{"number":453536,"amount":1000},
+         "creditCard":{"number":453536,"amount":220},
     "orderSchedule": [
-        {"bookTitle": "The Hunger Games", "tick": 12},{"bookTitle": "Poo the bear", "tick": 1},{"bookTitle": "Games of thrones", "tick": 7},{"bookTitle": "Harry Poter", "tick": 10}
+        {"bookTitle": "The Hunger Games", "tick": 24}
     ]
     }
   ]
   }
-
-
-
+  
+  
+    
 }

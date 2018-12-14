@@ -5,10 +5,7 @@ import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.*;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.LinkedList;
 
 /**
@@ -20,11 +17,14 @@ public class BookStoreRunner {
     public static void main(String[] args) {
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
-        File JsonFile = new File(args[0]);
-        InputStream inputStream = BookStoreRunner.class.getClassLoader().getResourceAsStream(JsonFile.getName());
-        Reader reader = new InputStreamReader(inputStream);
-        JsonElement rootElement = parser.parse(reader);
-        JsonObject rootObject = rootElement.getAsJsonObject();
+        Object obj = new Object();
+
+        try {
+            obj = parser.parse(new FileReader(args[0]));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JsonObject rootObject = (JsonObject) obj;
 
         //-------------------------- initialInventory --------------------------
 
@@ -59,7 +59,7 @@ public class BookStoreRunner {
         JsonPrimitive sellingNum = jsonServicesObj.getAsJsonPrimitive("selling");
         int sellingNumber = sellingNum.getAsInt();
         Thread[] sellingServices = new Thread[sellingNumber];
-        for (int i = 0; i< sellingNumber; i++) {
+        for (int i = 0; i < sellingNumber; i++) {
             String name = "sellingService " + i;
             SellingService toAdd = new SellingService(name);
             sellingServices[i] = new Thread(toAdd);
@@ -75,7 +75,7 @@ public class BookStoreRunner {
         JsonPrimitive logistics = jsonServicesObj.getAsJsonPrimitive("logistics");
         int logisticsNumber = logistics.getAsInt();
         Thread[] logisticsServices = new Thread[logisticsNumber];
-        for(int i = 0; i < logisticsServices.length; i++) {
+        for (int i = 0; i < logisticsServices.length; i++) {
             String name = "logisticService " + i;
             LogisticsService toAdd = new LogisticsService(name);
             logisticsServices[i] = new Thread(toAdd);
@@ -95,10 +95,10 @@ public class BookStoreRunner {
         JsonArray customers = jsonServicesObj.getAsJsonArray("customers");
         Customer[] customersArr = gson.fromJson(customers, Customer[].class);
         Thread[] APIServices = new Thread[customersArr.length];
-        for (int k = 0; k < APIServices.length;k++) {
+        for (int k = 0; k < APIServices.length; k++) {
             String name = customersArr[k].getName();
             LinkedList<BookOrderEvent> list = new LinkedList<>();
-            for (orderSchedule order: customersArr[k].getOrderSchedule()) {
+            for (orderSchedule order : customersArr[k].getOrderSchedule()) {
                 BookOrderEvent toAdd = new BookOrderEvent(order.getBookTitle(), customersArr[k], order.getTick());
                 list.add(toAdd);
             }
@@ -134,9 +134,9 @@ public class BookStoreRunner {
         }
 
         //-----------Running timeService----------
-        while (RunningCounter.getInstance().getNumberRunningThreads() < numOfServices);
+        while (RunningCounter.getInstance().getNumberRunningThreads() < numOfServices) ;
         timer.start();
-        while(RunningCounter.getInstance().getNumberRunningThreads() > 0);
+        while (RunningCounter.getInstance().getNumberRunningThreads() > 0) ;
         printBookStore();
         System.exit(0);
 

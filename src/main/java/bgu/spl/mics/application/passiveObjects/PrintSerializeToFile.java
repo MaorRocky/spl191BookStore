@@ -3,7 +3,6 @@ package bgu.spl.mics.application.passiveObjects;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,9 +25,9 @@ public class PrintSerializeToFile {
             e.printStackTrace();
         }
 
-
     }
-    public void printSerializedList(List<?> list){
+
+    public void printSerializedList(List<?> list) {
         try {
             FileOutputStream fileOut = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);

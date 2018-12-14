@@ -40,6 +40,7 @@ public class ResourceService extends MicroService{
 
 		subscribeBroadcast(TickBroadcast.class, tick -> {
 			if (tick.isTermination()) {
+				resources.releaseVehicle(null);
 				System.out.println(this.getName() + " terminating");
 				terminate();
 			}

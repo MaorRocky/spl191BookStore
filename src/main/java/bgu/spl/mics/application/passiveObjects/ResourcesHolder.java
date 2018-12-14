@@ -38,21 +38,16 @@ public class ResourcesHolder {
      * {@link DeliveryVehicle} when completed.
      */
     public Future<DeliveryVehicle> acquireVehicle() {
-        Future<DeliveryVehicle> future = new Future<>();
-        DeliveryVehicle vehicle = vehicles.remove();
-        if (vehicle != null) {
-            future.resolve(vehicle);
+        synchronized (vehicles) {
+            Future<DeliveryVehicle> future = new Future<>();
+            if (!vehicles.isEmpty()) {
+                future.resolve(vehicles.poll());
+            }
+            else {
+                vehicleWaitingQueue.add(future);
+            }
+            return future;
         }
-        else {
-            vehicleWaitingQueue.add(future);
-        }
-        /*DeliveryVehicle vehicle = null;
-        try {
-            vehicle = vehicles.take();
-        } catch (InterruptedException e) {
-        }
-        future.resolve(vehicle);*/
-        return future;
     }
 
     /**
@@ -63,14 +58,19 @@ public class ResourcesHolder {
      * @param vehicle {@link DeliveryVehicle} to be released.
      */
     public void releaseVehicle(DeliveryVehicle vehicle) {
-        //vehicles.add(vehicle);
-        if (vehicleWaitingQueue.isEmpty()) {
-            vehicles.add(vehicle);
+        synchronized (vehicles) {
+            if (vehicle == null) {
+                while(!vehicleWaitingQueue.isEmpty()) {
+                    vehicleWaitingQueue.poll().resolve(vehicle);
+                }
+            }
+            else if (vehicleWaitingQueue.isEmpty()) {
+                vehicles.add(vehicle);
+            }
+            else {
+                vehicleWaitingQueue.poll().resolve(vehicle);
+            }
         }
-        else {
-            vehicleWaitingQueue.poll().resolve(vehicle);
-        }
-
     }
 
     /**

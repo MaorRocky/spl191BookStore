@@ -16,7 +16,7 @@ import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class ResourceService extends MicroService{
+public class ResourceService extends MicroService {
 	private ResourcesHolder resources;
 
 
@@ -29,8 +29,7 @@ public class ResourceService extends MicroService{
 	protected void initialize() {
 		subscribeEvent(SendDeliveryEvent.class, delivery -> {
 			Future<DeliveryVehicle> future = resources.acquireVehicle();
-			DeliveryVehicle vehicle = future.get();
-			complete(delivery, vehicle);
+			complete(delivery, future);
 		});
 
 		subscribeEvent(ReturnVehicleEvent.class, returnVehicle -> {

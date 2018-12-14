@@ -13,11 +13,11 @@ public class PrintSerializeToFile {
         this.filename = filename;
     }
 
-    public void printSerialized(HashMap<?, ?> map) {
+    public void printSerialized(HashMap<?, ?> hashMap) {
         try {
             FileOutputStream fileOut = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(map);
+            out.writeObject(hashMap);
             out.close();
             fileOut.close();
         } catch (IOException e) {

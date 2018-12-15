@@ -6,6 +6,7 @@ import bgu.spl.mics.application.services.*;
 import com.google.gson.*;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -25,6 +26,12 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
         JsonObject rootObject = (JsonObject) obj;
+
+        String customers_HashMap = args[1];
+        String books_HashMap = args[2];
+        String list_of_order_receipts = args[3];
+        String MoneyRegisterPrint = args[4];
+
 
         //-------------------------- initialInventory --------------------------
 
@@ -137,16 +144,41 @@ public class BookStoreRunner {
         while (RunningCounter.getInstance().getNumberRunningThreads() < numOfServices) ;
         timer.start();
         while (RunningCounter.getInstance().getNumberRunningThreads() > 0) ;
-        printBookStore();
-        System.exit(0);
+        /*printBookStore();
+        System.exit(0);*/
+
+
+        /*---------------------printing customers_HashMap to output file-----------------------*/
+        printCustomers(customers_HashMap, customersArr);
+        /*---------------------printing books_HashMap to output file-----------------------*/
+        Inventory.getInstance().printInventoryToFile(books_HashMap);
+        /*---------------------printing list_of_order_receipts to output file----------------------------------*/
+        MoneyRegister.getInstance().printOrderReceipts(list_of_order_receipts);
+
 
     }
 
-    public static void printBookStore() {
+    /*public static void printBookStore() {
         Inventory.getInstance().testPrintInventory();
         ResourcesHolder.getInstance().testforResources();
         MoneyRegister.getInstance().testPrintReceipts();
+    }*/
+
+
+    public static HashMap<Integer, Customer> hashMapCustomers(Customer[] customersArray) {
+        HashMap<Integer, Customer> CustomersHashMap = new HashMap<>();
+        for (Customer customer : customersArray) {
+            CustomersHashMap.put(customer.getId(), customer);
+        }
+        return CustomersHashMap;
     }
+
+    public static void printCustomers(String filename, Customer[] customersArray) {
+        HashMap<Integer, Customer> CustomersHashMap = hashMapCustomers(customersArray);
+        PrintSerializeToFile printer = new PrintSerializeToFile(filename);
+        printer.printSerializedHashMap(CustomersHashMap);
+    }
+
 }
 
 

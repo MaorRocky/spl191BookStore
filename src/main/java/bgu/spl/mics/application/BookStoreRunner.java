@@ -154,6 +154,8 @@ public class BookStoreRunner {
         Inventory.getInstance().printInventoryToFile(books_HashMap);
         /*---------------------printing list_of_order_receipts to output file----------------------------------*/
         MoneyRegister.getInstance().printOrderReceipts(list_of_order_receipts);
+        /*---------------------printing money register to output file----------------------------------*/
+        printMoneyRegister(MoneyRegisterPrint, MoneyRegister.getInstance());
 
 
     }
@@ -179,6 +181,11 @@ public class BookStoreRunner {
         printer.printSerializedHashMap(CustomersHashMap);
     }
 
+
+    public static void printMoneyRegister(String filename, MoneyRegister moneyRegister) {
+        PrintSerializeToFile printer = new PrintSerializeToFile(filename);
+        printer.printSerializedObject(moneyRegister);
+    }
 }
 
 

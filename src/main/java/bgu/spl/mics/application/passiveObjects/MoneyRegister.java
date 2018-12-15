@@ -66,6 +66,8 @@ public class MoneyRegister implements Serializable {
 	printer.printSerializedList(PrintOrdersReceipts);
 	}
 
+
+
 	public void testPrintReceipts() {
 		System.out.println("------test for money register--------");
 		for (OrderReceipt receipt: receipts) {

@@ -38,4 +38,17 @@ public class PrintSerializeToFile {
             e.printStackTrace();
         }
     }
+
+    public void printSerializedObject(Object myObject){
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(myObject);
+            out.close();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

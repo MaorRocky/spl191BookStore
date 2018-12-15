@@ -144,8 +144,8 @@ public class BookStoreRunner {
         while (RunningCounter.getInstance().getNumberRunningThreads() < numOfServices) ;
         timer.start();
         while (RunningCounter.getInstance().getNumberRunningThreads() > 0) ;
-        /*printBookStore();
-        System.exit(0);*/
+        /*printBookStore();*/
+
 
 
         /*---------------------printing customers_HashMap to output file-----------------------*/
@@ -157,7 +157,7 @@ public class BookStoreRunner {
         /*---------------------printing money register to output file----------------------------------*/
         printMoneyRegister(MoneyRegisterPrint, MoneyRegister.getInstance());
 
-
+        System.exit(0);
     }
 
     /*public static void printBookStore() {

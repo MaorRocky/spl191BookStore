@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.LinkedList;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
-public class MoneyRegister {
+public class MoneyRegister implements Serializable {
 	private static class SingletonHolder {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
@@ -64,6 +65,8 @@ public class MoneyRegister {
 	PrintSerializeToFile printer = new PrintSerializeToFile(filename);
 	printer.printSerializedList(PrintOrdersReceipts);
 	}
+
+
 
 	public void testPrintReceipts() {
 		System.out.println("------test for money register--------");

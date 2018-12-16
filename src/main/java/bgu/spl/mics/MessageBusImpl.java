@@ -88,7 +88,7 @@ public class MessageBusImpl<K, V> implements MessageBus {
             broadcastTypeToMicroService.put(b.getClass(), new LinkedList<>());
         }
         synchronized (broadcastTypeToMicroService.get(b.getClass())) {
-            if (broadcastTypeToMicroService.containsKey(b.getClass())) {
+            if (broadcastTypeToMicroService.containsKey(b.getClass()) && !broadcastTypeToMicroService.get(b.getClass()).isEmpty()) {
                 for (MicroService service : broadcastTypeToMicroService.get(b.getClass())) {
                     microServiceToMessagesList.get(service).add(b);
                 }

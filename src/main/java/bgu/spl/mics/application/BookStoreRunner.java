@@ -167,7 +167,7 @@ public class BookStoreRunner {
     }*/
 
 
-    public static HashMap<Integer, Customer> hashMapCustomers(Customer[] customersArray) {
+    private static HashMap<Integer, Customer> hashMapCustomers(Customer[] customersArray) {
         HashMap<Integer, Customer> CustomersHashMap = new HashMap<>();
         for (Customer customer : customersArray) {
             CustomersHashMap.put(customer.getId(), customer);
@@ -175,14 +175,14 @@ public class BookStoreRunner {
         return CustomersHashMap;
     }
 
-    public static void printCustomers(String filename, Customer[] customersArray) {
+    private static void printCustomers(String filename, Customer[] customersArray) {
         HashMap<Integer, Customer> CustomersHashMap = hashMapCustomers(customersArray);
         PrintSerializeToFile printer = new PrintSerializeToFile(filename);
         printer.printSerializedHashMap(CustomersHashMap);
     }
 
 
-    public static void printMoneyRegister(String filename, MoneyRegister moneyRegister) {
+    private static void printMoneyRegister(String filename, MoneyRegister moneyRegister) {
         PrintSerializeToFile printer = new PrintSerializeToFile(filename);
         printer.printSerializedObject(moneyRegister);
     }

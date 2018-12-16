@@ -5,7 +5,8 @@ import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.*;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -18,14 +19,13 @@ public class BookStoreRunner {
     public static void main(String[] args) {
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
-        Object obj = new Object();
+        JsonObject obj = new JsonObject();
 
         try {
-            obj = parser.parse(new FileReader(args[0]));
+            obj = parser.parse(new FileReader(args[0])).getAsJsonObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        JsonObject rootObject = (JsonObject) obj;
 
         String customers_HashMap = args[1];
         String books_HashMap = args[2];
@@ -35,14 +35,14 @@ public class BookStoreRunner {
 
         //-------------------------- initialInventory --------------------------
 
-        JsonArray initialInventoryArray = rootObject.getAsJsonArray("initialInventory");
+        JsonArray initialInventoryArray = obj.getAsJsonArray("initialInventory");
         BookInventoryInfo[] bookInventoryInfo = gson.fromJson(initialInventoryArray, BookInventoryInfo[].class);
         Inventory.getInstance().load(bookInventoryInfo);
         /*loaded bookInventoryInfo*/
 
         //-------------------------- initialResources --------------------------
 
-        JsonArray initialResources = rootObject.getAsJsonArray("initialResources");
+        JsonArray initialResources = obj.getAsJsonArray("initialResources");
         JsonObject jsonObject = initialResources.get(0).getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("vehicles");
         DeliveryVehicle[] deliveryVehicles = gson.fromJson(jsonArray, DeliveryVehicle[].class);
@@ -50,7 +50,7 @@ public class BookStoreRunner {
         /*loaded deliveryVehicles*/
 
         //-------------------------- Services Object --------------------------
-        JsonObject jsonServicesObj = rootObject.getAsJsonObject("services");
+        JsonObject jsonServicesObj = obj.getAsJsonObject("services");
 
         //-------------------------- inventory service --------------------------
         JsonPrimitive jsonPrimitive = jsonServicesObj.getAsJsonPrimitive("inventoryService");
